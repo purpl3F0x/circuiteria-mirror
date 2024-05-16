@@ -5,7 +5,7 @@
 #circuit({
   element.block(
     x: 0, y: 0, w: 1.5, h: 2.2,
-    id: "PC-buf",
+    id: "PCBuf",
     fill: util.colors.orange,
     ports: (
       west: (
@@ -22,18 +22,18 @@
       )
     )
   )
-  wire.stub("PC-buf-port-CLK", "north", name: "CLK")
-  wire.stub("PC-buf-port-EN", "south", name: "PCWrite")
+  wire.stub("PCBuf-port-CLK", "north", name: "CLK")
+  wire.stub("PCBuf-port-EN", "south", name: "PCWrite")
   
   element.multiplexer(
-    x: 3, y: (from: "PC-buf-port-PC", to: "in0"), w: 1, h: 2,
+    x: 3, y: (from: "PCBuf-port-PC", to: "in0"), w: 1, h: 2,
     id: "AdrSrc-MP",
     fill: util.colors.orange,
     entries: 2
   )
   wire.wire(
     "wPCBuf-InstDataMgr", (
-      "PC-buf-port-PC",
+      "PCBuf-port-PC",
       "AdrSrc-MP-port-in0"
     ),
     name: "PC",
@@ -283,7 +283,7 @@
   wire.wire(
     "wResMP-PCBuf", (
       "Res-MP-port-out",
-      "PC-buf-port-PCNext"
+      "PCBuf-port-PCNext"
     ),
     style: "dodge",
     dodge-y: -5,
@@ -294,7 +294,6 @@
     bus: true
   )
 
-  
   wire.intersection("wResMP-RegFile.dodge-end")
   wire.intersection("wResMP-AdrSrc.dodge-end")
 })

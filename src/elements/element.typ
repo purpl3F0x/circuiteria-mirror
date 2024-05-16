@@ -39,12 +39,20 @@
   let width = w
   let height = h
 
+  let x = x
   let y = y
   if x == none { panic("Parameter x must be set") }
   if y == none { panic("Parameter y must be set") }
   if w == none { panic("Parameter w must be set") }
   if h == none { panic("Parameter h must be set") }
 
+  if (type(x) == dictionary) {
+    let offset = x.rel
+    let to = x.to
+    let (ctx, to-pos) = coordinate.resolve(ctx, (rel: (offset, 0), to: to))
+    x = to-pos.at(0)
+  }
+  
   if (type(y) == dictionary) {
     let from = y.from
     let to = y.to
