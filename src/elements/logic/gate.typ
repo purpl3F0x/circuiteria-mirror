@@ -7,6 +7,21 @@
   return (f, tl, tr, br, bl)
 }
 
+
+/// Draws a logic gate. This function is also available as `element.gate()`
+///
+/// - draw-shape (function): see #doc-ref("element.elmt")
+/// - x (number, dictionary): see #doc-ref("element.elmt")
+/// - y (number, dictionary): see #doc-ref("element.elmt")
+/// - w (number): see #doc-ref("element.elmt")
+/// - h (number): see #doc-ref("element.elmt")
+/// - inputs (int): The number of inputs
+/// - fill (none, color): see #doc-ref("element.elmt")
+/// - stroke (stroke): see #doc-ref("element.elmt")
+/// - id (str): see #doc-ref("element.elmt")
+/// - inverted (str, array): Either "all" or an array of port ids to display as inverted
+/// - inverted-radius (number): The radius of inverted ports dot
+/// - debug (dictionary): see #doc-ref("element.elmt")
 #let gate(
   draw-shape: default-draw-shape,
   x: none,
@@ -18,6 +33,7 @@
   stroke: black + 1pt,
   id: "",
   inverted: (),
+  inverted-radius: 0.2,
   debug: (
     ports: false
   )
@@ -65,14 +81,11 @@
   // Workaround because CeTZ needs to have all draw functions in the body
   let func = {}
   (func, tl, tr, br, bl) = draw-shape(id, tl, tr, br, bl, fill, stroke)
-  {
-    //draw.rect(tl, br)
-    func
-  }
+  func
 
-  let space = 100% / (inputs + 1)
+  let space = 100% / inputs
   for i in range(inputs) {
-    let pct = (i + 1) * space
+    let pct = (i + 0.5) * space
     let a = (tl, pct, bl)
     let b = (tr, pct, br)
     let int-name = id + "i" + str(i)
@@ -84,8 +97,8 @@
     let port-name = "in" + str(i)
     let port-pos = int-name + ".0"
     if inverted == "all" or port-name in inverted {
-      draw.circle(port-pos, radius: .2, anchor: "east", stroke: stroke)
-      port-pos = (rel: (-.4, 0), to: port-pos)
+      draw.circle(port-pos, radius: inverted-radius, anchor: "east", stroke: stroke)
+      port-pos = (rel: (-2 * inverted-radius, 0), to: port-pos)
     }
     add-port(
       id, "west",
@@ -96,8 +109,8 @@
 
   let out-pos = id + ".east"
   if inverted == "all" or "out" in inverted {
-    draw.circle(out-pos, radius: .2, anchor: "west", stroke: stroke)
-    out-pos = (rel: (.4, 0), to: out-pos)
+    draw.circle(out-pos, radius: inverted-radius, anchor: "west", stroke: stroke)
+    out-pos = (rel: (2 * inverted-radius, 0), to: out-pos)
   }
   add-port(
     id, "east",
@@ -105,23 +118,3 @@
     debug: debug.ports
   )
 })
-/* {
-  let ports = (west: (), east: ((id: "out"),))
-  for i in range(inputs) {
-    ports.west.push((id: "in"+str(i)))
-  }
-
-  element.elmt(
-    draw-shape: draw-shape,
-    x: x,
-    y: y,
-    w: w,
-    h: h,
-    ports: ports,
-    fill: fill,
-    stroke: stroke,
-    id: id,
-    auto-ports: true,
-    debug: debug
-  )
-}

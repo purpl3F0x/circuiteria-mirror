@@ -2,5 +2,6 @@
 
 #import "circuit.typ": circuit
 #import "element.typ"
+#import "gates.typ"
 #import "util.typ"
 #import "wire.typ"

@@ -45,6 +45,10 @@
   return (f, tl, tr, br, bl)
 }
 
+/// Draws a XOR gate. This function is also available as `element.gate-xor()`
+/// 
+/// For parameters, see #doc-ref("gates.gate")
+/// #examples.gate-xor
 #let gate-xor(
   x: none,
   y: none,
@@ -74,6 +78,10 @@
   )
 }
 
+/// Draws a XNOR gate. This function is also available as `element.gate-xnor()`
+/// 
+/// For parameters, see #doc-ref("gates.gate")
+/// #examples.gate-xnor
 #let gate-xnor(
   x: none,
   y: none,
@@ -97,7 +105,7 @@
     fill: fill,
     stroke: stroke,
     id: id,
-    inverted: inverted + ("out",),
+    inverted: if inverted != "all" {inverted + ("out",)} else {inverted},
     debug: debug
   )
 }

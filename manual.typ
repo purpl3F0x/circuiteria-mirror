@@ -4,6 +4,7 @@
 #import "doc/examples.typ"
 #import "src/circuit.typ": circuit
 #import "src/element.typ"
+#import "src/gates.typ"
 #import "src/util.typ"
 #import "src/wire.typ"
 
@@ -135,4 +136,24 @@ Simply import #link("src/lib.typ") and call the `circuit` function:
 
 #tidy.show-module(element-docs, sort-functions: false)
 
-#(tidy.utilities.get-style-functions(tidy.styles.default).show-reference)(label("wirewire()"), "test")
+#let gates-docs = tidy.parse-module(
+  read("src/elements/logic/gate.typ") + "\n" +
+  read("src/elements/logic/and.typ") + "\n" +
+  read("src/elements/logic/buf.typ") + "\n" +
+  read("src/elements/logic/or.typ") + "\n" +
+  read("src/elements/logic/xor.typ"),
+  name: "gates",
+  require-all-parameters: false,
+  scope: (
+    element: element,
+    circuit: circuit,
+    gates: gates,
+    draw: draw,
+    wire: wire,
+    tidy: tidy,
+    examples: examples,
+    doc-ref: doc-ref
+  )
+)
+
+#tidy.show-module(gates-docs, sort-functions: false)

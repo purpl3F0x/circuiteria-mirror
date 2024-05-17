@@ -24,6 +24,10 @@
   return (f, tl, tr, br, bl)
 }
 
+/// Draws a buffer gate. This function is also available as `element.gate-buf()`
+/// 
+/// For parameters, see #doc-ref("gates.gate")
+/// #examples.gate-buf
 #let gate-buf(
   x: none,
   y: none,
@@ -53,6 +57,10 @@
   )
 }
 
+/// Draws a NOT gate. This function is also available as `element.gate-not()`
+/// 
+/// For parameters, see #doc-ref("gates.gate")
+/// #examples.gate-not
 #let gate-not(x: none,
   y: none,
   w: none,
@@ -75,7 +83,7 @@
     fill: fill,
     stroke: stroke,
     id: id,
-    inverted: inverted + ("out",),
+    inverted: if inverted != "all" {inverted + ("out",)} else {inverted},
     debug: debug
   )
 }

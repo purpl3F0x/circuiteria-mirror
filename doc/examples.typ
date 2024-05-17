@@ -74,3 +74,43 @@ wire.stub("p", "east", name: "east", vertical: true)
 wire.stub("p", "south", name: "south", length: 15pt)
 wire.stub("p", "west", name: "west", length: 3em)
 ```)
+
+#let gate-and = example(```
+gates.gate-and(x: 0, y: 0, w: 1.5, h: 1.5)
+gates.gate-and(x: 3, y: 0, w: 1.5, h: 1.5, inverted: "all")
+```, vertical: true)
+
+#let gate-nand = example(```
+gates.gate-nand(x: 0, y: 0, w: 1.5, h: 1.5)
+gates.gate-nand(x: 3, y: 0, w: 1.5, h: 1.5, inverted: "all")
+```, vertical: true)
+
+#let gate-buf = example(```
+gates.gate-buf(x: 0, y: 0, w: 1.5, h: 1.5)
+gates.gate-buf(x: 3, y: 0, w: 1.5, h: 1.5, inverted: "all")
+```, vertical: true)
+
+#let gate-not = example(```
+gates.gate-not(x: 0, y: 0, w: 1.5, h: 1.5)
+gates.gate-not(x: 3, y: 0, w: 1.5, h: 1.5, inverted: "all")
+```, vertical: true)
+
+#let gate-or = example(```
+gates.gate-or(x: 0, y: 0, w: 1.5, h: 1.5)
+gates.gate-or(x: 3, y: 0, w: 1.5, h: 1.5, inverted: "all")
+```, vertical: true)
+
+#let gate-nor = example(```
+gates.gate-nor(x: 0, y: 0, w: 1.5, h: 1.5)
+gates.gate-nor(x: 3, y: 0, w: 1.5, h: 1.5, inverted: "all")
+```, vertical: true)
+
+#let gate-xor = example(```
+gates.gate-xor(x: 0, y: 0, w: 1.5, h: 1.5)
+gates.gate-xor(x: 3, y: 0, w: 1.5, h: 1.5, inverted: "all")
+```, vertical: true)
+
+#let gate-xnor = example(```
+gates.gate-xnor(x: 0, y: 0, w: 1.5, h: 1.5)
+gates.gate-xnor(x: 3, y: 0, w: 1.5, h: 1.5, inverted: "all")
+```, vertical: true)

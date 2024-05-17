@@ -38,6 +38,10 @@
   return (f, tl, tr, br, bl)
 }
 
+/// Draws an OR gate. This function is also available as `element.gate-or()`
+/// 
+/// For parameters, see #doc-ref("gates.gate")
+/// #examples.gate-or
 #let gate-or(
   x: none,
   y: none,
@@ -67,6 +71,10 @@
   )
 }
 
+/// Draws a NOR gate. This function is also available as `element.gate-nor()`
+/// 
+/// For parameters, see #doc-ref("gates.gate")
+/// #examples.gate-nor
 #let gate-nor(
   x: none,
   y: none,
@@ -90,7 +98,7 @@
     fill: fill,
     stroke: stroke,
     id: id,
-    inverted: inverted + ("out",),
+    inverted: if inverted != "all" {inverted + ("out",)} else {inverted},
     debug: debug
   )
 }

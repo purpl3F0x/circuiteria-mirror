@@ -27,6 +27,10 @@
   return (f, tl, tr, br, bl)
 }
 
+/// Draws an AND gate. This function is also available as `element.gate-and()`
+/// 
+/// For parameters, see #doc-ref("gates.gate")
+/// #examples.gate-and
 #let gate-and(
   x: none,
   y: none,
@@ -56,6 +60,10 @@
   )
 }
 
+/// Draws an NAND gate. This function is also available as `element.gate-nand()`
+/// 
+/// For parameters, see #doc-ref("gates.gate")
+/// #examples.gate-nand
 #let gate-nand(
   x: none,
   y: none,
@@ -79,7 +87,7 @@
     fill: fill,
     stroke: stroke,
     id: id,
-    inverted: inverted + ("out",),
+    inverted: if inverted != "all" {inverted + ("out",)} else {inverted},
     debug: debug
   )
 }
