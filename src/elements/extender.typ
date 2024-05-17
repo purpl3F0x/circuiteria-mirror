@@ -36,7 +36,6 @@
   stroke: black + 1pt,
   id: "",
   debug: (
-    grid: false,
     ports: false
   )
 ) = {

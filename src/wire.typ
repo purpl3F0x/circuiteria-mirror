@@ -118,7 +118,7 @@
 /// - style (str): The wire's style (see `wire-styles` for possible values)
 /// - reverse (bool): If true, the start and end points will be swapped (useful in cases where the start point depends on the end point, for example with perpendiculars)
 /// - zigzag-ratio (ratio): Position of the zigzag vertical relative to the horizontal span (only with style "zigzag")
-/// - dodge-y (int, float, length, ratio): Y position to dodge the wire to (only with style "dodge")
+/// - dodge-y (number): Y position to dodge the wire to (only with style "dodge")
 /// - dodge-sides (array): The start and end sides (going out of the connected element) of the wire (only with style "dodge")
 /// - dodge-margins (array): The start and end margins (i.e. space before dodging) of the wire (only with style "dodge")
 #let wire(

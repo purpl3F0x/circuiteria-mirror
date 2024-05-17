@@ -33,7 +33,6 @@
   stroke: black + 1pt,
   id: "",
   debug: (
-    grid: false,
     ports: false
   )
 ) = {
@@ -44,6 +43,10 @@
     for i in range(entries) {
       let bits = util.lpad(str(i, base: 2), nbits)
       ports.push((id: "in" + str(i), name: bits))
+    }
+  } else {
+    for (i, port) in entries.enumerate() {
+      ports.push((id: "in" + str(i), name: port))
     }
   }
   

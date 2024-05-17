@@ -11,11 +11,11 @@
 ///
 /// #example(`#util.lpad("0100", 8)`, mode: "markup")
 ///
-/// - s (str): The string to pad
+/// - string (str): The string to pad
 /// - len (int): The target length
 /// -> str
-#let lpad(s, len) = {
-  let res = "0" * len + s
+#let lpad(string, len) = {
+  let res = "0" * len + string
   return res.slice(-len)
 }
 

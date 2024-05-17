@@ -32,7 +32,6 @@
   auto-ports: true,
   ports-y: (),
   debug: (
-    grid: false,
     ports: false
   )
 ) = draw.get-ctx(ctx => {
