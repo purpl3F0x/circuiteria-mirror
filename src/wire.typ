@@ -2,22 +2,7 @@
 #import "util.typ": opposite-anchor
 
 /// List of valid wire styles
-/// #box(width: 100%, align(center)[
-///   #circuit({
-///     draw.circle((0, 0), radius: .1, name: "p1")
-///     draw.circle((2, 1), radius: .1, name: "p2")
-///     draw.circle((3, 0), radius: .1, name: "p3")
-///     draw.circle((5, 1), radius: .1, name: "p4")
-///     draw.circle((6, 0), radius: .1, name: "p5")
-///     draw.circle((8, 1), radius: .1, name: "p6")
-///     wire.wire("w1", ("p1", "p2"), style: "direct")
-///     wire.wire("w2", ("p3", "p4"), style: "zigzag")
-///     wire.wire("w3", ("p5", "p6"), style: "dodge", dodge-y: -0.5, dodge-margins: (0.5, 0.5))
-///     draw.content((1, -1), [`direct`])
-///     draw.content((4, -1), [`zigzag`])
-///     draw.content((7, -1), [`dodge`])
-///   })
-/// ])
+/// #examples.wires
 #let wire-styles = ("direct", "zigzag", "dodge")
 #let signal-width = 1pt
 #let bus-width = 1.5pt
@@ -233,13 +218,7 @@
 
 /// Draws a wire stub (useful for unlinked ports)
 ///
-/// #box(width: 100%, align(center)[
-///   #circuit({
-///     draw.circle((0, 0), radius: .1, name: "p")
-///     wire.stub("p", "east", name: "port")
-///   })
-/// ])
-///
+/// #examples.stub
 /// - port-id (str): The port anchor
 /// - side (str): The side on which the port is (one of "north", "east", "south", "west")
 /// - name (none, str): Optional name displayed at the end of the stub

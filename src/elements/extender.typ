@@ -27,17 +27,7 @@
 
 /// Draws a bit extender
 ///
-/// #box(width: 100%, align(center)[
-///   #circuit({
-///     element.extender(
-///       x: 0, y: 0,
-///       w: 3, h: 1,
-///       id: "extender"
-///     )
-///     wire.stub("extender-port-in", "west")
-///     wire.stub("extender-port-out", "east")
-///   })
-/// ])
+/// #examples.extender
 /// - x (number, dictionary): see `elmt()`
 /// - y (number, dictionary): see `elmt()`
 /// - w (number): see `elmt()`

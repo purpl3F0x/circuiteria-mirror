@@ -23,32 +23,7 @@
 
 /// Draws a multiplexer
 ///
-/// #box(width: 100%, align(center)[
-///   #circuit({
-///     element.multiplexer(
-///       x: 0, y: 0,
-///       w: 1, h: 3,
-///       id: "multiplexer",
-///       entries: 3
-///     )
-///     wire.stub("multiplexer-port-in0", "west")
-///     wire.stub("multiplexer-port-in1", "west")
-///     wire.stub("multiplexer-port-in2", "west")
-///     wire.stub("multiplexer.north", "north")
-///     wire.stub("multiplexer-port-out", "east")
-///     element.multiplexer(
-///       x: 3, y: 0,
-///       w: 1, h: 3,
-///       id: "multiplexer2",
-///       entries: ("A", "B", "C")
-///     )
-///     wire.stub("multiplexer2-port-in0", "west")
-///     wire.stub("multiplexer2-port-in1", "west")
-///     wire.stub("multiplexer2-port-in2", "west")
-///     wire.stub("multiplexer2.south", "south")
-///     wire.stub("multiplexer2-port-out", "east")
-///   })
-/// ])
+/// #examples.multiplexer
 /// - x (number, dictionary): see `elmt()`
 /// - y (number, dictionary): see `elmt()`
 /// - w (number): see `elmt()`

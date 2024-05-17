@@ -1,0 +1,76 @@
+#import "example.typ": example
+
+#let alu = example(```
+element.alu(x: 0, y: 0, w: 1, h: 2, id: "alu")
+wire.stub("alu-port-in1", "west")
+wire.stub("alu-port-in2", "west")
+wire.stub("alu-port-out", "east")
+```)
+
+#let block = example(```
+element.block(
+  x: 0, y: 0, w: 2, h: 2, id: "block",
+  ports: (
+    north: ((id: "clk", clock: true),),
+    west: ((id: "in1", name: "A"),
+           (id: "in2", name: "B")),
+    east: ((id: "out", name: "C"),)
+  )
+)
+wire.stub("block-port-clk", "north")
+wire.stub("block-port-in1", "west")
+wire.stub("block-port-in2", "west")
+wire.stub("block-port-out", "east")
+```)
+
+#let extender = example(```
+element.extender(
+  x: 0, y: 0, w: 3, h: 1,
+  id: "extender"
+)
+wire.stub("extender-port-in", "west")
+wire.stub("extender-port-out", "east")
+```)
+
+#let multiplexer = example(```
+element.multiplexer(
+  x: 0, y: 0, w: 1, h: 3,
+  id: "multiplexer",
+  entries: 3
+)
+wire.stub("multiplexer.north", "north")
+wire.stub("multiplexer-port-out", "east")
+
+element.multiplexer(
+  x: 0, y: -4, w: 1, h: 3,
+  id: "multiplexer2",
+  entries: ("A", "B", "C")
+)
+wire.stub("multiplexer2.south", "south")
+wire.stub("multiplexer2-port-out", "east")
+
+for i in range(3) {
+  wire.stub("multiplexer-port-in" + str(i), "west")
+  wire.stub("multiplexer2-port-in" + str(i), "west")
+}
+```)
+
+#let wires = example(```
+for i in range(3) {
+  draw.circle((i * 3, 0), radius: .1, name: "p" + str(i * 2))
+  draw.circle((i * 3 + 2, 1), radius: .1, name: "p" + str(i * 2 + 1))
+  draw.content((i * 3 + 1, -1), raw(wire.wire-styles.at(i)))
+}
+wire.wire("w1", ("p0", "p1"), style: "direct")
+wire.wire("w2", ("p2", "p3"), style: "zigzag")
+wire.wire("w3", ("p4", "p5"), style: "dodge",
+          dodge-y: -0.5, dodge-margins: (0.5, 0.5))
+```, vertical: true)
+
+#let stub = example(```
+draw.circle((0, 0), radius: .1, name: "p")
+wire.stub("p", "north", name: "north", length: 1)
+wire.stub("p", "east", name: "east", vertical: true)
+wire.stub("p", "south", name: "south", length: 15pt)
+wire.stub("p", "west", name: "west", length: 3em)
+```)
