@@ -1,5 +1,5 @@
 /// Predefined color palette
-/// #let w = 5
+/// #let w = 4
 /// #box(width: 100%, align(center)[
 ///   #canvas(length: 2em, {
 ///     for (i, color) in util.colors.pairs().enumerate() {
@@ -15,7 +15,8 @@
   yellow: rgb(250, 225, 127),
   green: rgb(127, 200, 172),
   pink: rgb(236, 127, 178),
-  purple: rgb(189, 151, 255)
+  purple: rgb(189, 151, 255),
+  blue: rgb(127, 203, 235)
 )
 
 /// Pads a string on the left with 0s to the given length
