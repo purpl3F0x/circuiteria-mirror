@@ -1,0 +1,85 @@
+#import "@preview/cetz:0.2.2": draw
+#import "gate.typ"
+
+#let draw-shape(id, tl, tr, br, bl, fill, stroke) = {
+  let (x, y) = bl
+  let (width, height) = (tr.at(0) - x, tr.at(1) - y)
+
+  let t = (x + width / 4, y + height)
+  let b = (x + width / 4, y)
+
+  let f = draw.group(name: id, {
+    draw.merge-path(
+      inset: 0.5em,
+      fill: fill,
+      stroke: stroke,
+      name: id + "-path",
+      close: true, {
+        draw.line(bl, tl, t)
+        draw.bezier((), b, tr, br)
+        draw.line((), b)
+      }
+    )
+    
+    draw.anchor("north", t)
+    draw.anchor("south", b)
+  })
+  return (f, tl, tr, br, bl)
+}
+
+#let gate-and(
+  x: none,
+  y: none,
+  w: none,
+  h: none,
+  inputs: 2,
+  fill: none,
+  stroke: black + 1pt,
+  id: "",
+  inverted: (),
+  debug: (
+    ports: false
+  )
+) = {
+  gate.gate(
+    draw-shape: draw-shape,
+    x: x,
+    y: y,
+    w: w,
+    h: h,
+    inputs: inputs,
+    fill: fill,
+    stroke: stroke,
+    id: id,
+    inverted: inverted,
+    debug: debug
+  )
+}
+
+#let gate-nand(
+  x: none,
+  y: none,
+  w: none,
+  h: none,
+  inputs: 2,
+  fill: none,
+  stroke: black + 1pt,
+  id: "",
+  inverted: (),
+  debug: (
+    ports: false
+  )
+) = {
+  gate-and(
+    x: x,
+    y: y,
+    w: w,
+    h: h,
+    inputs: inputs,
+    fill: fill,
+    stroke: stroke,
+    id: id,
+    inverted: inverted + ("out",),
+    debug: debug
+  )
+}

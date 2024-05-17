@@ -38,7 +38,7 @@
 /// - stroke (stroke): Border stroke
 /// - id (str): The block id (for future reference)
 /// - auto-ports (bool): Whether to use auto port placements or not. If false, `draw-shape` is responsible for adding the appropiate ports
-/// - ports-y (array): Array of the ports y offsets (used with `auto-ports: false`)
+/// - ports-y (dictionary): Dictionary of the ports y offsets (used with `auto-ports: false`)
 /// - debug (dictionary): Dictionary of debug options.
 ///
 ///   Supported fields include:

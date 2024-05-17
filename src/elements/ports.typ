@@ -68,6 +68,10 @@
     "west": (tl, bl)
   )
 
+  if type(ports) != dictionary {
+    return
+  }
+
   for (side, props) in sides {
     let side-ports = ports.at(side, default: ())
     let space = 100% / (side-ports.len() + 1)
