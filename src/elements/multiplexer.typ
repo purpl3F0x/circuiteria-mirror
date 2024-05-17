@@ -24,17 +24,8 @@
 /// Draws a multiplexer
 ///
 /// #examples.multiplexer
-/// - x (number, dictionary): see #doc-ref("element.elmt")
-/// - y (number, dictionary): see #doc-ref("element.elmt")
-/// - w (number): see #doc-ref("element.elmt")
-/// - h (number): see #doc-ref("element.elmt")
-/// - name (none, str): see #doc-ref("element.elmt")
-/// - name-anchor (str): see #doc-ref("element.elmt")
+/// For other parameters description, see #doc-ref("element.elmt")
 /// - entries (int, array): If it is an integer, it defines the number of input ports (automatically named with their binary index). If it is an array of strings, it defines the name of each input.
-/// - fill (none, color): see #doc-ref("element.elmt")
-/// - stroke (stroke): see #doc-ref("element.elmt")
-/// - id (str): see #doc-ref("element.elmt")
-/// - debug (dictionary): see #doc-ref("element.elmt")
 #let multiplexer(
   x: none,
   y: none,

@@ -14,7 +14,7 @@
 #{
   outline(indent: true, depth: 3)
 }
-#set page(numbering: "1/1", header: align(right)[circuiteria #sym.dash.em v#lib.version])
+
 #show link: set text(blue)
 #show heading.where(level: 3): it => context {
   let cnt = counter(heading)
@@ -44,6 +44,44 @@
     )
   ]
 }
+
+#set page(numbering: "1/1", header: align(right)[circuiteria #sym.dash.em v#lib.version])
+#set page(
+  header: locate(loc => {
+    let txt = [circuiteria #sym.dash.em v#lib.version]
+    let cnt = counter(heading)
+    let cnt-val = cnt.get()
+    if cnt-val.len() < 2 {
+      align(left, txt)
+      return
+    }
+    let i = cnt-val.at(1) - 1
+    grid(
+      columns: (auto, 1fr),
+      column-gutter: 1em,
+      align: horizon,
+      txt,
+      place(horizon + left)[
+        #rect(width: 100%, height: .5em, radius: .25em, stroke: none, fill: util.colors.values().at(i))
+      ]
+    )
+  }),
+  footer: locate(loc => {
+    let cnt = counter(heading)
+    let cnt-val = cnt.get()
+    if cnt-val.len() < 2 { return }
+    let i = cnt-val.at(1) - 1
+    grid(
+      columns: (1fr, auto),
+      column-gutter: 1em,
+      align: horizon,
+      place(horizon + left)[
+        #rect(width: 100%, height: .5em, radius: .25em, stroke: none, fill: util.colors.values().at(i))
+      ],
+      counter(page).display("1/1", both: true)
+    )
+  })
+)
 
 #let doc-ref(target, full: false, var: false) = {
   let (module, func) = target.split(".")
@@ -122,7 +160,6 @@ Simply import #link("src/lib.typ") and call the `circuit` function:
   read("src/elements/extender.typ") + "\n" +
   read("src/elements/multiplexer.typ"),
   name: "element",
-  require-all-parameters: true,
   scope: (
     element: element,
     circuit: circuit,
@@ -136,6 +173,8 @@ Simply import #link("src/lib.typ") and call the `circuit` function:
 
 #tidy.show-module(element-docs, sort-functions: false)
 
+#pagebreak()
+
 #let gates-docs = tidy.parse-module(
   read("src/elements/logic/gate.typ") + "\n" +
   read("src/elements/logic/and.typ") + "\n" +
@@ -143,7 +182,6 @@ Simply import #link("src/lib.typ") and call the `circuit` function:
   read("src/elements/logic/or.typ") + "\n" +
   read("src/elements/logic/xor.typ"),
   name: "gates",
-  require-all-parameters: false,
   scope: (
     element: element,
     circuit: circuit,
