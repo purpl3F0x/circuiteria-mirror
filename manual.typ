@@ -44,6 +44,20 @@
   ]
 }
 
+#let doc-ref(target, full: false, var: false) = {
+  let (module, func) = target.split(".")
+  let label-name = module + func
+  let display-name = func
+  if full {
+    display-name = target
+  }
+  if not var {
+    label-name += "()"
+    display-name += "()"
+  }
+  link(label(label-name))[#display-name]
+}
+
 = Introduction
 
 This package provides a way to make beautiful block circuit diagrams using the CeTZ package.
@@ -92,7 +106,8 @@ Simply import #link("src/lib.typ") and call the `circuit` function:
     wire: wire,
     circuit: circuit,
     draw: draw,
-    examples: examples
+    examples: examples,
+    doc-ref: doc-ref
   )
 )
 #tidy.show-module(wire-docs)
@@ -113,8 +128,11 @@ Simply import #link("src/lib.typ") and call the `circuit` function:
     draw: draw,
     wire: wire,
     tidy: tidy,
-    examples: examples
+    examples: examples,
+    doc-ref: doc-ref
   )
 )
 
 #tidy.show-module(element-docs, sort-functions: false)
+
+#(tidy.utilities.get-style-functions(tidy.styles.default).show-reference)(label("wirewire()"), "test")

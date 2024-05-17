@@ -40,16 +40,16 @@
 /// Draws an ALU with two inputs
 ///
 /// #examples.alu
-/// - x (number, dictionary): see `elmt()`
-/// - y (number, dictionary): see `elmt()`
-/// - w (number): see `elmt()`
-/// - h (number): see `elmt()`
-/// - name (none, str): see `elmt()`
-/// - name-anchor (str): see `elmt()`
-/// - fill (none, color): see `elmt()`
-/// - stroke (stroke): see `elmt()`
-/// - id (str): see `elmt()`
-/// - debug (dictionary): see `elmt()`
+/// - x (number, dictionary): see #doc-ref("element.elmt")
+/// - y (number, dictionary): see #doc-ref("element.elmt")
+/// - w (number): see #doc-ref("element.elmt")
+/// - h (number): see #doc-ref("element.elmt")
+/// - name (none, str): see #doc-ref("element.elmt")
+/// - name-anchor (str): see #doc-ref("element.elmt")
+/// - fill (none, color): see #doc-ref("element.elmt")
+/// - stroke (stroke): see #doc-ref("element.elmt")
+/// - id (str): see #doc-ref("element.elmt")
+/// - debug (dictionary): see #doc-ref("element.elmt")
 #let alu(
   x: none,
   y: none,

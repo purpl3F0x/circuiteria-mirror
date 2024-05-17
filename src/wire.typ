@@ -100,7 +100,7 @@
 /// - slice (none, array): Optional bits slice (start and end bit indices). If set, it will be displayed at the start of the wire
 /// - color (color): The stroke color
 /// - dashed (bool): Whether the stroke is dashed or not
-/// - style (str): The wire's style (see `wire-styles` for possible values)
+/// - style (str): The wire's style (see #doc-ref("wire.wire-styles", var: true) for possible values)
 /// - reverse (bool): If true, the start and end points will be swapped (useful in cases where the start point depends on the end point, for example with perpendiculars)
 /// - zigzag-ratio (ratio): Position of the zigzag vertical relative to the horizontal span (only with style "zigzag")
 /// - dodge-y (number): Y position to dodge the wire to (only with style "dodge")
