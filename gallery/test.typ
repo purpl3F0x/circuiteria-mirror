@@ -105,7 +105,7 @@
     )
   )
   wire.stub("RegFile-port-CLK", "north", name: "CLK")
-  wire.stub("RegFile-port-WE3", "north", name: "Regwrite", vertical: true)
+  wire.stub("RegFile-port-WE3", "north", name: "Regwrite", name-offset: 0.6)
   wire.stub("RegFile-port-A2", "west")
   wire.stub("RegFile-port-RD2", "east")
 

@@ -224,16 +224,25 @@
 /// - name (none, str): Optional name displayed at the end of the stub
 /// - vertical (bool): Whether the name should be displayed vertically
 /// - length (number): The length of the stub
-#let stub(port-id, side, name: none, vertical: false, length: 1em) = {
-  let offset = (
+/// - name-offset (number): The name offset, perpendicular to the stub
+#let stub(port-id, side, name: none, vertical: false, length: 1em, name-offset: 0) = {
+  let end-offset = (
     north: (0, length),
     east: (length, 0),
     south: (0, -length),
     west: (-length, 0)
   ).at(side)
+  
+  let name-offset = (
+    north: (name-offset, length),
+    east: (length, name-offset),
+    south: (name-offset, -length),
+    west: (-length, name-offset)
+  ).at(side)
+
   draw.line(
     port-id,
-    (rel: offset, to: port-id)
+    (rel: end-offset, to: port-id)
   )
   if name != none {
     let text-anchor = if vertical {
@@ -248,7 +257,7 @@
       anchor: text-anchor,
       padding: 0.2em,
       angle: if vertical {90deg} else {0deg},
-      (rel: offset, to: port-id),
+      (rel: name-offset, to: port-id),
       name
     )
   }
