@@ -13,6 +13,43 @@
   return (f, tl, tr, br, bl)
 }
 
+/// Draws a block element
+///
+/// #box(width: 100%, align(center)[
+///   #circuit({
+///     element.block(
+///       x: 0, y: 0,
+///       w: 2, h: 2,
+///       id: "block",
+///       ports: (
+///         north: ((id: "clk", clock: true),),
+///         west: (
+///           (id: "in1", name: "A"),
+///           (id: "in2", name: "B"),
+///         ),
+///         east: (
+///           (id: "out", name: "C"),
+///         )
+///       )
+///     )
+///     wire.stub("block-port-clk", "north")
+///     wire.stub("block-port-in1", "west")
+///     wire.stub("block-port-in2", "west")
+///     wire.stub("block-port-out", "east")
+///   })
+/// ])
+/// - x (number, dictionary): see `elmt()`
+/// - y (number, dictionary): see `elmt()`
+/// - w (number): see `elmt()`
+/// - h (number): see `elmt()`
+/// - name (none, str): see `elmt()`
+/// - name-anchor (str): see `elmt()`
+/// - ports: (dictionary): see `elmt()`
+/// - ports-margins: (dictionary): see `elmt()`
+/// - fill (none, color): see `elmt()`
+/// - stroke (stroke): see `elmt()`
+/// - id (str): see `elmt()`
+/// - debug (dictionary): see `elmt()`
 #let block(
   x: none,
   y: none,

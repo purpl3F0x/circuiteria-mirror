@@ -1,4 +1,15 @@
 /// Predefined color palette
+/// #let w = 5
+/// #box(width: 100%, align(center)[
+///   #canvas(length: 2em, {
+///     for (i, color) in util.colors.pairs().enumerate() {
+///       let x = calc.rem(i, w) * 2
+///       let y = calc.floor(i / w) * 2
+///       draw.rect((x, -y), (x + 1, -y - 1), fill: color.last(), stroke: none)
+///       draw.content((x + 0.5, -y - 1.25), color.first())
+///     }
+///   })
+/// ])
 #let colors = (
   orange: rgb(245, 180, 147),
   yellow: rgb(250, 225, 127),

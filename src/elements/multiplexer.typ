@@ -21,6 +21,45 @@
   return (f, tl, tr, br, bl)
 }
 
+/// Draws a multiplexer
+///
+/// #box(width: 100%, align(center)[
+///   #circuit({
+///     element.multiplexer(
+///       x: 0, y: 0,
+///       w: 1, h: 3,
+///       id: "multiplexer",
+///       entries: 3
+///     )
+///     wire.stub("multiplexer-port-in0", "west")
+///     wire.stub("multiplexer-port-in1", "west")
+///     wire.stub("multiplexer-port-in2", "west")
+///     wire.stub("multiplexer.north", "north")
+///     wire.stub("multiplexer-port-out", "east")
+///     element.multiplexer(
+///       x: 3, y: 0,
+///       w: 1, h: 3,
+///       id: "multiplexer2",
+///       entries: ("A", "B", "C")
+///     )
+///     wire.stub("multiplexer2-port-in0", "west")
+///     wire.stub("multiplexer2-port-in1", "west")
+///     wire.stub("multiplexer2-port-in2", "west")
+///     wire.stub("multiplexer2.south", "south")
+///     wire.stub("multiplexer2-port-out", "east")
+///   })
+/// ])
+/// - x (number, dictionary): see `elmt()`
+/// - y (number, dictionary): see `elmt()`
+/// - w (number): see `elmt()`
+/// - h (number): see `elmt()`
+/// - name (none, str): see `elmt()`
+/// - name-anchor (str): see `elmt()`
+/// - entries (int, array): If it is an integer, it defines the number of input ports (automatically named with their binary index). If it is an array of string, it defines the name of each input.
+/// - fill (none, color): see `elmt()`
+/// - stroke (stroke): see `elmt()`
+/// - id (str): see `elmt()`
+/// - debug (dictionary): see `elmt()`
 #let multiplexer(
   x: none,
   y: none,

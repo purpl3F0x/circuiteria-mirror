@@ -37,6 +37,26 @@
   return (f, tl, tr, br, bl)
 }
 
+/// Draws an ALU with two inputs
+///
+/// #box(width: 100%, align(center)[
+///   #circuit({
+///     element.alu(x: 0, y: 0, w: 1, h: 2, id: "alu")
+///     wire.stub("alu-port-in1", "west")
+///     wire.stub("alu-port-in2", "west")
+///     wire.stub("alu-port-out", "east")
+///   })
+/// ])
+/// - x (number, dictionary): see `elmt()`
+/// - y (number, dictionary): see `elmt()`
+/// - w (number): see `elmt()`
+/// - h (number): see `elmt()`
+/// - name (none, str): see `elmt()`
+/// - name-anchor (str): see `elmt()`
+/// - fill (none, color): see `elmt()`
+/// - stroke (stroke): see `elmt()`
+/// - id (str): see `elmt()`
+/// - debug (dictionary): see `elmt()`
 #let alu(
   x: none,
   y: none,

@@ -25,6 +25,29 @@
   return (f, tl, tr, br, bl)
 }
 
+/// Draws a bit extender
+///
+/// #box(width: 100%, align(center)[
+///   #circuit({
+///     element.extender(
+///       x: 0, y: 0,
+///       w: 3, h: 1,
+///       id: "extender"
+///     )
+///     wire.stub("extender-port-in", "west")
+///     wire.stub("extender-port-out", "east")
+///   })
+/// ])
+/// - x (number, dictionary): see `elmt()`
+/// - y (number, dictionary): see `elmt()`
+/// - w (number): see `elmt()`
+/// - h (number): see `elmt()`
+/// - name (none, str): see `elmt()`
+/// - name-anchor (str): see `elmt()`
+/// - fill (none, color): see `elmt()`
+/// - stroke (stroke): see `elmt()`
+/// - id (str): see `elmt()`
+/// - debug (dictionary): see `elmt()`
 #let extender(
   x: none,
   y: none,
