@@ -192,15 +192,18 @@
   let second-pos = points.at(1)
   if reverse {
     (first-pt, last-pt) = (last-pt, first-pt)
-    (first-pos, second-pos) = (second-pos, first-pos)
   }
   
   let angle = 0deg
   if rotate-name {
     (ctx, first-pos) = coordinate.resolve(ctx, first-pos)
     (ctx, second-pos) = coordinate.resolve(ctx, second-pos)
-    let (x1, y1, _) = first-pos
-    let (x2, y2, _) = second-pos
+    
+    if reverse {
+      (first-pos, second-pos) = (second-pos, first-pos)
+    }
+    let (x1, y1, ..) = first-pos
+    let (x2, y2, ..) = second-pos
     angle = calc.atan2(x2 - x1, y2 - y1)
   }
   
