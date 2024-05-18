@@ -58,19 +58,16 @@
   if (type(y) == dictionary) {
     let from = y.from
     let to = y.to
-    let (to-side, i) = find-port(ports, to)
-    let margins = (0%, 0%)
-    if to-side in ports-margins {
-      margins = ports-margins.at(to-side)
-    }
-    let used-pct = 100% - margins.at(0) - margins.at(1)
-    let used-height = height * used-pct / 100%
-    let top-margin = height * margins.at(0) / 100%
     
-    let dy = used-height * (i + 1) / (ports.at(to-side).len() + 1)
+    let dy
+    if to == "out" {
+      dy = height / 2
+    } else {
+      dy = height * (i + 0.5) / inputs
+    }
     
     let (ctx, from-pos) = coordinate.resolve(ctx, from)
-    y = from-pos.at(1) + dy - height + top-margin
+    y = from-pos.at(1) + dy - height
   }
 
   let tl = (x, y + height)
