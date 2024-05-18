@@ -15,11 +15,12 @@
       panic("Clock port must have previous and next positions")
     }
     
+    let size = if port.at("small", default: false) {8pt} else {1em}
     let offset
-    if      (side == "north") { offset = (   0, -1em) }
-    else if (side == "east")  { offset = (-1em,    0) }
-    else if (side == "south") { offset = (   0,  1em) }
-    else if (side == "west")  { offset = ( 1em,    0) }
+    if      (side == "north") { offset = (    0, -size) }
+    else if (side == "east")  { offset = (-size,     0) }
+    else if (side == "south") { offset = (    0,  size) }
+    else if (side == "west")  { offset = ( size,     0) }
 
     let pos1 = (rel: offset, to: pos)
 
@@ -95,6 +96,11 @@
       let pct-next = (i + 1.5) * space
       let pos-prev = (pt0, pct-prev, pt1)
       let pos-next = (pt0, pct-next, pt1)
+
+      if port.at("small", default: false) {
+        pos-prev = (pos, 4pt, pt0)
+        pos-next = (pos, 4pt, pt1)
+      }
 
       add-port(
         elmt-id,
