@@ -5,8 +5,8 @@
   let (x, y) = bl
   let (width, height) = (tr.at(0) - x, tr.at(1) - y)
 
-  let t = (x + width / 4, y + height)
-  let b = (x + width / 4, y)
+  let t = (x + width / 2, y + height)
+  let b = (x + width / 2, y)
 
   let f = draw.group(name: id, {
     draw.merge-path(
@@ -16,7 +16,7 @@
       name: id + "-path",
       close: true, {
         draw.line(bl, tl, t)
-        draw.bezier((), b, tr, br)
+        draw.arc-through((), (tr , 50%, br), b)
         draw.line((), b)
       }
     )
