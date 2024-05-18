@@ -1,6 +1,6 @@
 #import "../src/lib.typ": *
 
-//#set page(width: auto, height: auto, margin: .5cm)
+#set page(width: auto, height: auto, margin: .5cm)
 
 #let teal = rgb(37, 155, 166)
 #let orange = rgb(254, 160, 93)
