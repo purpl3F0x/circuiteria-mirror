@@ -1,6 +1,6 @@
 #import "../src/lib.typ": circuit, element, util, wire
 
-#set page(flipped: true)
+#set page(width: auto, height: auto, margin: .5cm)
 
 #circuit({
   element.block(

@@ -1,8 +1,7 @@
 #import "@preview/cetz:0.2.2": draw
 #import "../src/lib.typ": circuit, element, util, wire
 
-#set page(flipped: true)
-#let debug = false
+#set page(width: auto, height: auto, margin: .5cm)
 
 #circuit({
   element.block(
@@ -14,18 +13,14 @@
         (id: "out1"),
         (id: "out2"),
       )
-    ),
-    debug: (
-      ports: debug 
-
     )
   )
   element.gate-and(
-    x: 4, y: 0, w: 2, h: 2, id: "and1", debug: (ports: debug),
+    x: 4, y: 0, w: 2, h: 2, id: "and1",
     inverted: ("in1")
   )
   element.gate-or(
-    x: 7, y: 0, w: 2, h: 2, id: "or1", debug: (ports: debug),
+    x: 7, y: 0, w: 2, h: 2, id: "or1",
     inverted: ("in0", "out")
   )
 
@@ -47,7 +42,7 @@
   )
 
   element.gate-and(
-    x: 11, y: 0, w: 2, h: 2, id: "and2", inputs: 3, debug: (ports: debug),
+    x: 11, y: 0, w: 2, h: 2, id: "and2", inputs: 3,
     inverted: ("in0", "in2")
   )
   for i in range(3) {
@@ -55,35 +50,35 @@
   }
 
   element.gate-xor(
-    x: 14, y: 0, w: 2, h: 2, id: "xor", debug: (ports: debug),
+    x: 14, y: 0, w: 2, h: 2, id: "xor",
     inverted: ("in1")
   )
   
   element.gate-buf(
-    x: 0, y: -3, w: 2, h: 2, id: "buf", debug: (ports: debug)
+    x: 0, y: -3, w: 2, h: 2, id: "buf"
   )
   element.gate-not(
-    x: 0, y: -6, w: 2, h: 2, id: "not", debug: (ports: debug)
+    x: 0, y: -6, w: 2, h: 2, id: "not"
   )
   
   element.gate-and(
-    x: 3, y: -3, w: 2, h: 2, id: "and", debug: (ports: debug)
+    x: 3, y: -3, w: 2, h: 2, id: "and"
   )
   element.gate-nand(
-    x: 3, y: -6, w: 2, h: 2, id: "nand", debug: (ports: debug)
+    x: 3, y: -6, w: 2, h: 2, id: "nand"
   )
   
   element.gate-or(
-    x: 6, y: -3, w: 2, h: 2, id: "or", debug: (ports: debug)
+    x: 6, y: -3, w: 2, h: 2, id: "or"
   )
   element.gate-nor(
-    x: 6, y: -6, w: 2, h: 2, id: "nor", debug: (ports: debug)
+    x: 6, y: -6, w: 2, h: 2, id: "nor"
   )
   
   element.gate-xor(
-    x: 9, y: -3, w: 2, h: 2, id: "xor", debug: (ports: debug)
+    x: 9, y: -3, w: 2, h: 2, id: "xor"
   )
   element.gate-xnor(
-    x: 9, y: -6, w: 2, h: 2, id: "xnor", debug: (ports: debug)
+    x: 9, y: -6, w: 2, h: 2, id: "xnor"
   )
 })

@@ -1,7 +1,7 @@
 #import "@preview/cetz:0.2.2": draw
 #import "../src/lib.typ": *
 
-#set page(flipped: true, paper: "a3")
+#set page(width: auto, height: auto, margin: .5cm)
 
 #circuit({
   element.multiplexer(

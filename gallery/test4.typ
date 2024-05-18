@@ -1,7 +1,7 @@
 #import "@preview/cetz:0.2.2": draw
 #import "../src/lib.typ": *
 
-#set page(flipped: true)
+#set page(width: auto, height: auto, margin: .5cm)
 
 #circuit({
   element.group(id: "toplvl", name: "Toplevel", {
@@ -200,18 +200,22 @@
     draw.content("dmem.south-west", [*External Memories*], anchor: "north", padding: 10pt)
   })
 
-  wire.wire(
-    "w-dp-clk",
-    ("dp-port-clk", (-1, 4.2)),
-    style: "zigzag",
-    zigzag-dir: "horizontal",
-    zigzag-ratio: 100%
+  draw.line(name: "w-dp-clk",
+    "dp-port-clk",
+    (rel: (0, .5), to: ()),
+    (
+      rel: (-.5, 0),
+      to: (horizontal: "toplvl.west", vertical: ())
+    )
   )
   draw.content("w-dp-clk.end", "clk", anchor: "east", padding: 3pt)
   
-  wire.wire(
-    "w-dp-rst",
-    ("dp-port-rst", (horizontal: (-1, 0), vertical: ()))
+  draw.line(name: "w-dp-rst",
+    "dp-port-rst",
+    (
+      rel: (-.5, 0),
+      to: (horizontal: "toplvl.west", vertical: ())
+    )
   )
   draw.content("w-dp-rst.end", "rst", anchor: "east", padding: 3pt)
 })
