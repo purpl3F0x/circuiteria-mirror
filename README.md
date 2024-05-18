@@ -3,15 +3,15 @@
 Circuiteria is a [Typst](https://typst.app) package for drawing block circuit diagrams using the [CeTZ](https://typst.app/universe/package/cetz) package.
 
 <p align="center">
-  <img src="gallery/platypus.png" alt="Perry the platypus">
+  <img src="./gallery/platypus.png" alt="Perry the platypus">
 </p>
 
 ## Examples
 <table>
   <tr>
     <td colspan="2">
-      <a href="gallery/test.typ">
-        <img src="gallery/test.png" width="500px">
+      <a href="./gallery/test.typ">
+        <img src="./gallery/test.png" width="500px">
       </a>
     </td>
   </tr>
@@ -20,8 +20,8 @@ Circuiteria is a [Typst](https://typst.app) package for drawing block circuit di
   </tr>
   <tr>
     <td colspan="2">
-      <a href="gallery/test5.typ">
-        <img src="gallery/test5.png" width="500px">
+      <a href="./gallery/test5.typ">
+        <img src="./gallery/test5.png" width="500px">
       </a>
     </td>
   </tr>
@@ -30,13 +30,13 @@ Circuiteria is a [Typst](https://typst.app) package for drawing block circuit di
   </tr>
   <tr>
     <td>
-      <a href="gallery/test4.typ">
-        <img src="gallery/test4.png" width="250px">
+      <a href="./gallery/test4.typ">
+        <img src="./gallery/test4.png" width="250px">
       </a>
     </td>
     <td>
-      <a href="gallery/test6.typ">
-        <img src="gallery/test6.png" width="250px">
+      <a href="./gallery/test6.typ">
+        <img src="./gallery/test6.png" width="250px">
       </a>
     </td>
   </tr>
