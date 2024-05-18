@@ -1,5 +1,6 @@
 #import "@preview/cetz:0.2.2": draw, coordinate
 #import "ports.typ": add-ports, add-port
+#import "../util.typ"
 
 #let find-port(ports, id) = {
   for (side, side-ports) in ports {
@@ -115,7 +116,7 @@
   if (name != none) {
     draw.content(
       (name: id, anchor: name-anchor),
-      anchor: name-anchor,
+      anchor: if name-anchor in util.valid-anchors {name-anchor} else {"center"},
       padding: 0.5em,
       align(center)[*#name*]
     )

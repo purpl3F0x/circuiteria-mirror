@@ -69,3 +69,8 @@
     south-west: "north-west"
   ).at(anchor)
 }
+
+#let valid-anchors = (
+  "center", "north", "east", "west", "south",
+  "north-east", "north-west", "south-east", "south-west"
+)

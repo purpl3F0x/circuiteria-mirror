@@ -24,6 +24,7 @@
     draw.anchor("south", (p2, 50%, p3))
     draw.anchor("west", (p0, 50%, p3))
     draw.anchor("east", (p1, 50%, p2))
+    draw.anchor("name", (p5, 50%, (p1, 50%, p2)))
   })
 
   let f2 = add-port(id, "west", (id: "in1"), (p0, 50%, p6))
