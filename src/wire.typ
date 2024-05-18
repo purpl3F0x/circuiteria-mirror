@@ -22,7 +22,11 @@
 #let get-zigzag-wire(pts, ratio, dir) = {
   let start = pts.first()
   let end = pts.last()
-  let mid = (start, ratio, end)
+  let mid = if dir == "vertical" {
+    (start, ratio, (horizontal: end, vertical: ()))
+  } else {
+    (start, ratio, (horizontal: (), vertical: end))
+  }
 
   let points = if dir == "vertical" {
     (
@@ -235,8 +239,7 @@
   }
 
   if slice != none {
-    let (start, end) = slice
-    let slice-txt = "[" + str(start) + ":" + str(end) + "]"
+    let slice-txt = "[" + slice.map(b => str(b)).join(":") + "]"
     
     draw.content(
       first-pt,
