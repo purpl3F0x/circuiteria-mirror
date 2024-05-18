@@ -18,7 +18,7 @@
         name: "Datapath",
         ports: (
           north: (
-            (id: "clk", clock: true),
+            (id: "clk", clock: true, small: true),
             (id: "Zero"),
             (id: "Regsrc"),
             (id: "PCSrc"),
@@ -104,7 +104,7 @@
       name: "Data\n Memory",
       ports: (
         north: (
-          (id: "clk", clock: true),
+          (id: "clk", clock: true, small: true),
           (id: "WE", name: "WE")
         ),
         west: (
