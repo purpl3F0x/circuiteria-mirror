@@ -71,7 +71,7 @@
   let out-pct = if align-out {h-ratio / 2} else {50%}
   let ports-y = (
     "in": (h) => {h - h * (h-ratio / 200%)},
-    "out": (h) => {h * (out-pct / 100%)}
+    "out": (h) => {h - h * (out-pct / 100%)}
   )
   
   element.elmt(

@@ -86,6 +86,7 @@
     ports-y: (
       in1: (h) => {h * 0.225},
       in2: (h) => {h * 0.775},
+      out: (h) => {h * 0.5}
     ),
     debug: debug
   )

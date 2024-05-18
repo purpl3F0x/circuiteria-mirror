@@ -33,7 +33,7 @@
   stroke: black + 1pt,
   id: "",
   inverted: (),
-  inverted-radius: 0.2,
+  inverted-radius: 0.1,
   debug: (
     ports: false
   )

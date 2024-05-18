@@ -307,6 +307,6 @@
     bus: true
   )
   
-  wire.intersection("wResMP-RegFile.dodge-end")
-  wire.intersection("wResMP-AdrSrc.dodge-end")
+  wire.intersection("wResMP-RegFile.dodge-end", radius: .2)
+  wire.intersection("wResMP-AdrSrc.dodge-end", radius: .2)
 })

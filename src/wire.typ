@@ -7,7 +7,7 @@
 #let signal-width = 1pt
 #let bus-width = 1.5pt
 
-#let intersection(pt, radius: .2, fill: black) = {
+#let intersection(pt, radius: .1, fill: black) = {
   draw.circle(pt, radius: radius, stroke: none, fill: fill)
 }
 

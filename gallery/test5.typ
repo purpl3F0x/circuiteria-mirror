@@ -202,8 +202,8 @@
     style: "zigzag",
     zigzag-ratio: 1
   )
-  wire.intersection("wPC2.zig", radius: 2pt)
-  wire.intersection("wPC2.zag", radius: 2pt)
+  wire.intersection("wPC2.zig")
+  wire.intersection("wPC2.zag")
   wire.stub("PCAdd-port-in2", "west", name: "4", length: 1.5)
   wire.wire(
     "wPC+4", ("PCAdd-port-out", "PCMux-port-in0"),
@@ -278,11 +278,11 @@
     reverse: true,
     slice: (31, 7)
   )
-  wire.intersection("wF3.end", radius: 2pt)
-  wire.intersection("wF7.end", radius: 2pt)
-  wire.intersection("wA1.end", radius: 2pt)
-  wire.intersection("wA2.end", radius: 2pt)
-  wire.intersection("wA3.end", radius: 2pt)
+  wire.intersection("wF3.end")
+  wire.intersection("wF7.end")
+  wire.intersection("wA1.end")
+  wire.intersection("wA2.end")
+  wire.intersection("wA3.end")
 
   wire.stub("RegFile-port-clk", "north", name: "clk", length: 0.25)
   wire.wire("wRD2", ("RegFile-port-RD2", "SrcBMux-port-in0"))
@@ -293,7 +293,7 @@
     name: "WriteData",
     name-pos: "end"
   )
-  wire.intersection("wWD.zig", radius: 2pt)
+  wire.intersection("wWD.zig")
 
   wire.wire(
     "wImmALU", ("Ext-port-out", "SrcBMux-port-in1"),
@@ -305,7 +305,7 @@
   wire.wire(
     "wImmJump", ("Ext-port-out", "JumpAdd-port-in2")
   )
-  wire.intersection("wImmALU.zig", radius: 2pt)
+  wire.intersection("wImmALU.zig")
   wire.wire(
     "wJumpPC", ("JumpAdd-port-out", "PCMux-port-in1"),
     style: "dodge",
@@ -351,7 +351,7 @@
     dodge-y: 2,
     dodge-margins: (3, 2)
   )
-  wire.intersection("wALURes2.start2", radius: 2pt)
+  wire.intersection("wALURes2.start2")
 
   wire.stub("DMem-port-clk", "north", name: "clk", length: 0.25)
   wire.wire(
