@@ -1,10 +1,12 @@
 #import "@preview/cetz:0.2.2": draw
 #import "../util.typ"
 #import "element.typ"
+#import "ports.typ": add-port
 
-#let draw-shape(id, tl, tr, br, bl, fill, stroke) = {
-  let tr2 = (tr, 20%, br)
-  let br2 = (tr, 80%, br)
+#let draw-shape(id, tl, tr, br, bl, fill, stroke, h-ratio: 60%) = {
+  let margin = (100% - h-ratio) / 2
+  let tr2 = (tr, margin, br)
+  let br2 = (br, margin, tr)
   let f = draw.group(name: id, {
     draw.merge-path(
       inset: 0.5em,
@@ -18,6 +20,7 @@
     draw.anchor("west", (tl, 50%, bl))
     draw.anchor("east", (tr2, 50%, br2))
   })
+
   return (f, tl, tr, br, bl)
 }
 
@@ -26,6 +29,7 @@
 /// #examples.multiplexer
 /// For other parameters description, see #doc-ref("element.elmt")
 /// - entries (int, array): If it is an integer, it defines the number of input ports (automatically named with their binary index). If it is an array of strings, it defines the name of each input.
+/// - h-ratio (ratio): The height ratio of the right side relative to the full height
 #let multiplexer(
   x: none,
   y: none,
@@ -34,6 +38,7 @@
   name: none,
   name-anchor: "center",
   entries: 2,
+  h-ratio: 60%,
   fill: none,
   stroke: black + 1pt,
   id: "",
@@ -42,6 +47,9 @@
   )
 ) = {
   let ports = ()
+  let ports-y = (
+    out: (h) => {h * 0.5}
+  )
 
   if (type(entries) == int) {
     let nbits = calc.ceil(calc.log(entries, base: 2))
@@ -54,9 +62,15 @@
       ports.push((id: "in" + str(i), name: port))
     }
   }
+
+  let space = 100% / ports.len()
+  let l = ports.len()
+  for (i, port) in ports.enumerate() {
+    ports-y.insert(port.id, (h) => {h * (i + 0.5) / l})
+  }
   
   element.elmt(
-    draw-shape: draw-shape,
+    draw-shape: draw-shape.with(h-ratio: h-ratio),
     x: x,
     y: y,
     w: w,
@@ -67,6 +81,14 @@
     fill: fill,
     stroke: stroke,
     id: id,
+    ports-y: ports-y,
+    auto-ports: false,
     debug: debug
   )
+
+  for (i, port) in ports.enumerate() {
+    let pct = (i + 0.5) * space
+    add-port(id, "west", port, (id+".north-west", pct, id+".south-west"))
+  }
+  add-port(id, "east", (id: "out"), (id+".north-east", 50%, id+".south-east"))
 }
