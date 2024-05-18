@@ -141,3 +141,10 @@ wire.wire("w1", ("b1-port-out", "b3-port-in1"))
 wire.wire("w2", ("b2-port-out", "b3-port-in2"),
           style: "zigzag")
 ```)
+
+#let intersection = example(```
+wire.wire("w1", ((0, 0), (1, 1)), style: "zigzag")
+wire.wire("w2", ((0, 0), (1, -.5)),
+          style: "zigzag", zigzag-ratio: 80%)
+wire.intersection("w1.zig")
+```)

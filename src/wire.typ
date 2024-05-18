@@ -7,6 +7,11 @@
 #let signal-width = 1pt
 #let bus-width = 1.5pt
 
+/// Draws a wire intersection at the given anchor
+/// #examples.intersection
+/// - pt (point): A CeTZ compatible point / anchor
+/// - radius (number): The radius of the intersection
+/// - fill (color): The fill color
 #let intersection(pt, radius: .1, fill: black) = {
   draw.circle(pt, radius: radius, stroke: none, fill: fill)
 }
