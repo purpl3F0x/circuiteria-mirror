@@ -19,6 +19,10 @@
     draw.anchor("south", (bl, 50%, br2))
     draw.anchor("west", (tl, 50%, bl))
     draw.anchor("east", (tr2, 50%, br2))
+    draw.anchor("north-west", tl)
+    draw.anchor("north-east", tr2)
+    draw.anchor("south-east", br2)
+    draw.anchor("south-west", bl)
   })
 
   return (f, tl, tr, br, bl)

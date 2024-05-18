@@ -24,6 +24,10 @@
     draw.anchor("south", (p2, 50%, p3))
     draw.anchor("west", (p0, 50%, p3))
     draw.anchor("east", (p1, 50%, p2))
+    draw.anchor("north-west", p0)
+    draw.anchor("north-east", p1)
+    draw.anchor("south-east", p2)
+    draw.anchor("south-west", p3)
     draw.anchor("name", (p5, 50%, (p1, 50%, p2)))
   })
 
