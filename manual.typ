@@ -158,7 +158,8 @@ Simply import #link("src/lib.typ") and call the `circuit` function:
   read("src/elements/alu.typ") + "\n" +
   read("src/elements/block.typ") + "\n" +
   read("src/elements/extender.typ") + "\n" +
-  read("src/elements/multiplexer.typ"),
+  read("src/elements/multiplexer.typ") + "\n" +
+  read("src/elements/group.typ"),
   name: "element",
   scope: (
     element: element,

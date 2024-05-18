@@ -114,3 +114,30 @@ gates.gate-xor(x: 3, y: 0, w: 1.5, h: 1.5, inverted: "all")
 gates.gate-xnor(x: 0, y: 0, w: 1.5, h: 1.5)
 gates.gate-xnor(x: 3, y: 0, w: 1.5, h: 1.5, inverted: "all")
 ```, vertical: true)
+
+#let group = example(```
+element.group(
+  id: "g1", name: "Group 1", stroke: (dash: "dashed"),
+  {
+    element.block(id: "b1", w: 2, h: 2,
+      x: 0, y: 1.5,
+      ports: (east: ((id: "out"),)),
+      fill: util.colors.green
+    )
+    element.block(id: "b2", w: 2, h: 1,
+      x: 0, y: 0,
+      ports: (east: ((id: "out"),)),
+      fill: util.colors.orange
+    )
+  }
+)
+element.block(id: "b3", w: 2, h: 3,
+  x: (rel: 1, to: "g1.east"),
+  y: (from: "b1-port-out", to: "in1"),
+  ports: (west: ((id: "in1"), (id: "in2"))),
+  fill: util.colors.blue
+)
+wire.wire("w1", ("b1-port-out", "b3-port-in1"))
+wire.wire("w2", ("b2-port-out", "b3-port-in2"),
+          style: "zigzag")
+```)
