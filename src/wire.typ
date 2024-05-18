@@ -7,8 +7,8 @@
 #let signal-width = 1pt
 #let bus-width = 1.5pt
 
-#let intersection(pt) = {
-  draw.circle(pt, radius: .2, stroke: none, fill: black)
+#let intersection(pt, radius: .2, fill: black) = {
+  draw.circle(pt, radius: radius, stroke: none, fill: fill)
 }
 
 #let get-direct-wire(pts) = {
@@ -19,17 +19,26 @@
   return (pts, anchors)
 }
 
-#let get-zigzag-wire(pts, ratio) = {
+#let get-zigzag-wire(pts, ratio, dir) = {
   let start = pts.first()
   let end = pts.last()
   let mid = (start, ratio, end)
 
-  let points = (
-    start,
-    (horizontal: mid, vertical: ()),
-    (horizontal: (), vertical: end),
-    end
-  )
+  let points = if dir == "vertical" {
+    (
+      start,
+      (horizontal: mid, vertical: ()),
+      (horizontal: (), vertical: end),
+      end
+    )
+  } else {
+    (
+      start,
+      (horizontal: (), vertical: mid),
+      (horizontal: end, vertical: ()),
+      end
+    )
+  }
   let anchors = (
     "start": start,
     "zig": points.at(1),
@@ -102,7 +111,10 @@
 /// - dashed (bool): Whether the stroke is dashed or not
 /// - style (str): The wire's style (see #doc-ref("wire.wire-styles", var: true) for possible values)
 /// - reverse (bool): If true, the start and end points will be swapped (useful in cases where the start point depends on the end point, for example with perpendiculars)
+/// - directed (bool): If true, the wire will be directed, meaning an arrow will be drawn at the endpoint
+/// - rotate-name (bool): If true, the name will be rotated according to the wire's slope
 /// - zigzag-ratio (ratio): Position of the zigzag vertical relative to the horizontal span (only with style "zigzag")
+/// - zigzag-dir (str): The zigzag's direction. As either "vertical" or "horizontal" (only with dstyle "zigzag")
 /// - dodge-y (number): Y position to dodge the wire to (only with style "dodge")
 /// - dodge-sides (array): The start and end sides (going out of the connected element) of the wire (only with style "dodge")
 /// - dodge-margins (array): The start and end margins (i.e. space before dodging) of the wire (only with style "dodge")
@@ -116,7 +128,10 @@
   dashed: false,
   style: "direct",
   reverse: false,
+  directed: false,
+  rotate-name: true,
   zigzag-ratio: 50%,
+  zigzag-dir: "vertical",
   dodge-y: 0,
   dodge-sides: ("east", "west"),
   dodge-margins: (5%, 5%)
@@ -144,7 +159,7 @@
     (points, anchors) = get-direct-wire(pts)
     
   } else if style == "zigzag" {
-    (points, anchors) = get-zigzag-wire(pts, zigzag-ratio)
+    (points, anchors) = get-zigzag-wire(pts, zigzag-ratio, zigzag-dir)
     
   } else if style == "dodge" {
     (points, anchors) = get-dodge-wire(
@@ -156,8 +171,12 @@
     )
   }
 
+  let mark = (fill: color)
+  if directed {
+    mark = (end: ">", fill: color)
+  }
   draw.group(name: id, {
-    draw.line(..points, stroke: stroke)
+    draw.line(..points, stroke: stroke, mark: mark)
     for (anchor-name, anchor-pos) in anchors {
       draw.anchor(anchor-name, anchor-pos)
     }
@@ -165,8 +184,20 @@
 
   let first-pt = id + ".start"
   let last-pt = id + ".end"
+  let first-pos = points.first()
+  let second-pos = points.at(1)
   if reverse {
     (first-pt, last-pt) = (last-pt, first-pt)
+    (first-pos, second-pos) = (second-pos, first-pos)
+  }
+  
+  let angle = 0deg
+  if rotate-name {
+    (ctx, first-pos) = coordinate.resolve(ctx, first-pos)
+    (ctx, second-pos) = coordinate.resolve(ctx, second-pos)
+    let (x1, y1, _) = first-pos
+    let (x2, y2, _) = second-pos
+    angle = calc.atan2(x2 - x1, y2 - y1)
   }
   
   if name != none {
@@ -199,7 +230,7 @@
         anchor = "south-east"
       }
 
-      draw.content(point, anchor: anchor, padding: 3pt, name)
+      draw.content(point, anchor: anchor, padding: 3pt, angle: angle, name)
     }
   }
 
