@@ -52,16 +52,13 @@ Circuiteria is a [Typst](https://typst.app) package for drawing block circuit di
 *Click on the example image to jump to the code.*
 
 ## Usage
-For information, see the [manual](manual.pdf)
+For more information, see the [manual](manual.pdf)
 
-To use this package, simply import [src/lib.typ](src/lib.typ) and call the `circuit` function:
+To use this package, simply import [circuiteria](https://typst.app/universe/package/circuiteria) and call the `circuit` function:
 ```typ
-#import "src/lib.typ"
-#lib.circuit({
-  import lib: *
+#import "@preview/circuiteria:0.1.0"
+#circuiteria.circuit({
+  import circuiteria: *
   ...
 })
 ```
-
-## Installing
-> TODO
