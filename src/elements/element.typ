@@ -52,13 +52,13 @@
   h: none,
   name: none,
   name-anchor: "center",
-  ports: (),
-  ports-margins: (),
+  ports: (:),
+  ports-margins: (:),
   fill: none,
   stroke: black + 1pt,
   id: "",
   auto-ports: true,
-  ports-y: (),
+  ports-y: (:),
   debug: (
     ports: false
   )
