@@ -12,4 +12,7 @@
 #import "elements/logic/xor.typ": gate-xor, gate-xnor
 #import "elements/logic/buf.typ": gate-buf, gate-not
 
+#import "elements/electrical/resistor.typ": resistor
+#import "elements/electrical/capacitor.typ": capacitor
+
 #import "elements/group.typ": group
