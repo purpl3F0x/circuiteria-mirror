@@ -16,7 +16,7 @@ cnt="$#"
 i=1
 for f
 do
-    f2="${f/typ/png}"
+    f2="${f%.typ}.png"
     echo "($i/$cnt) $f -> $f2"
     typst c --root ./ "$f" "$f2"
     i=$((i+1))
@@ -32,7 +32,7 @@ then
     i=1
     for f
     do
-        f2="${f/typ/pdf}"
+        f2="${f%.typ}.pdf"
         echo "($i/$cnt) $f -> $f2"
         typst c --root ./ "$f" "$f2"
         i=$((i+1))
