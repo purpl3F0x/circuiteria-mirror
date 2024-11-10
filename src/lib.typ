@@ -1,6 +1,7 @@
 #let version = version(0, 1, 0)
 
 #import "circuit.typ": circuit
+#import "electrical.typ"
 #import "element.typ"
 #import "gates.typ"
 #import "util.typ"
