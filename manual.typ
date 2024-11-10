@@ -4,6 +4,7 @@
 #import "doc/examples.typ"
 #import "src/circuit.typ": circuit
 #import "src/element.typ"
+#import "src/electrical.typ"
 #import "src/gates.typ"
 #import "src/util.typ"
 #import "src/wire.typ"
@@ -196,3 +197,23 @@ Simply import #link("src/lib.typ") and call the `circuit` function:
 )
 
 #tidy.show-module(gates-docs, sort-functions: false)
+
+#pagebreak()
+
+#let electrical-docs = tidy.parse-module(
+  read("src/elements/electrical/capacitor.typ") + "\n" +
+  read("src/elements/electrical/resistor.typ") + "\n",
+  name: "electrical",
+  scope: (
+    element: element,
+    circuit: circuit,
+    electrical: electrical,
+    draw: draw,
+    wire: wire,
+    tidy: tidy,
+    examples: examples,
+    doc-ref: doc-ref
+  )
+)
+
+#tidy.show-module(electrical-docs, sort-functions: false)

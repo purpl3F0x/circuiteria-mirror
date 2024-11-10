@@ -148,3 +148,21 @@ wire.wire("w2", ((0, 0), (1, -.5)),
           style: "zigzag", zigzag-ratio: 80%)
 wire.intersection("w1.zig")
 ```)
+
+#let capacitor = example(```
+electrical.capacitor(
+  x: 0, y: 0, w: 2, h: 1, id: "a",
+  scales: (100%, 80%), gap: 0.3
+)
+
+electrical.capacitor(
+  x: 4, y: -0.5, w: 1, h: 2, id: "b",
+  vertical: true, symbols: ([+], none)
+)
+```, vertical: true)
+
+#let resistor = example(```
+electrical.resistor(x: 0, y: 0, w: 2, h: 0.5, id: "a", zigzags: 8)
+electrical.resistor(x: 4, y: -0.5, w: 0.5, h: 2, id: "b", vertical: true)
+electrical.resistor(x: 6.5, y: 0, w: 2, h: 0.5, id: "c", zigzags: none)
+```, vertical: true)
