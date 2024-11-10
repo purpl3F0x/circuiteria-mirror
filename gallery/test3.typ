@@ -81,4 +81,57 @@
   element.gate-xnor(
     x: 9, y: -6, w: 2, h: 2, id: "xnor"
   )
+
+  element.resistor(
+    x: 0, y: -8, w: 2, h: 0.5, id: "res1"
+  )
+
+  element.capacitor(
+    x: 3, y: (from: "res1-port-1", to: "0"),
+    w: 2, h: 0.6,
+    id: "cap1",
+    scales: (100%, 80%),
+    symbols: ([+], [-])
+  )
+
+  element.resistor(
+    x: (rel: 1, to: "cap1-port-1"),
+    y: (from: "cap1-port-1", to: "0"),
+    w: 0.5, h: 2,
+    id: "res2",
+    vertical: true,
+    zigzags: 8
+  )
+
+  element.capacitor(
+    x: (rel: 1, to: "res2.east"),
+    y: (from: "res2-port-1", to: "1"),
+    w: 0.5, h: 2,
+    id: "cap2",
+    vertical: true,
+    symbols: ([a], [b])
+  )
+
+  element.resistor(
+    x: (rel: 1, to: "cap2-port-0"),
+    y: (from: "cap2-port-0", to: "0"),
+    w: 2, h: 0.5,
+    id: "res3",
+    zigzags: none
+  )
+
+  element.resistor(
+    x: (rel: 1, to: "res3-port-1"),
+    y: (from: "res3-port-1", to: "0"),
+    w: 0.5, h: 2,
+    id: "res4",
+    zigzags: none,
+    vertical: true
+  )
+
+  wire.wire("w4", ("res1-port-1", "cap1-port-0"))
+  wire.wire("w5", ("cap1-port-1", "res2-port-0"))
+  wire.wire("w6", ("res2-port-1", "cap2-port-1"))
+  wire.wire("w7", ("cap2-port-0", "res3-port-0"))
+  wire.wire("w8", ("res3-port-1", "res4-port-0"))
 })
