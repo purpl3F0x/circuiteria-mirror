@@ -1,4 +1,4 @@
-#import "@preview/cetz:0.2.2": draw
+#import "@preview/cetz:0.3.2": draw
 #import "gate.typ"
 
 #let space = 10%

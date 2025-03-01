@@ -1,5 +1,5 @@
-#import "@preview/tidy:0.3.0"
-#import "@preview/cetz:0.2.2": draw, canvas
+#import "@preview/tidy:0.4.1"
+#import "@preview/cetz:0.3.2": draw, canvas
 #import "src/lib.typ"
 #import "doc/examples.typ"
 #import "src/circuit.typ": circuit
@@ -12,7 +12,7 @@
   numbering("1.1", ..num)
 })
 #{
-  outline(indent: true, depth: 3)
+  outline(indent: auto, depth: 3)
 }
 
 #show link: set text(blue)
@@ -47,7 +47,7 @@
 
 #set page(numbering: "1/1", header: align(right)[circuiteria #sym.dash.em v#lib.version])
 #set page(
-  header: locate(loc => {
+  header: context {
     let txt = [circuiteria #sym.dash.em v#lib.version]
     let cnt = counter(heading)
     let cnt-val = cnt.get()
@@ -65,8 +65,8 @@
         #rect(width: 100%, height: .5em, radius: .25em, stroke: none, fill: util.colors.values().at(i))
       ]
     )
-  }),
-  footer: locate(loc => {
+  },
+  footer: context {
     let cnt = counter(heading)
     let cnt-val = cnt.get()
     if cnt-val.len() < 2 { return }
@@ -80,12 +80,12 @@
       ],
       counter(page).display("1/1", both: true)
     )
-  })
+  }
 )
 
 #let doc-ref(target, full: false, var: false) = {
   let (module, func) = target.split(".")
-  let label-name = module + func
+  let label-name = module + "-" + func
   let display-name = func
   if full {
     display-name = target
@@ -94,7 +94,7 @@
     label-name += "()"
     display-name += "()"
   }
-  link(label(label-name))[#display-name]
+  link(label(label-name), raw(display-name))
 }
 
 = Introduction
@@ -117,6 +117,7 @@ Simply import #link("src/lib.typ") and call the `circuit` function:
 #let circuit-docs = tidy.parse-module(
   read("src/circuit.typ"),
   name: "circuit",
+  old-syntax: true,
   require-all-parameters: true
 )
 #tidy.show-module(circuit-docs)
@@ -126,6 +127,7 @@ Simply import #link("src/lib.typ") and call the `circuit` function:
 #let util-docs = tidy.parse-module(
   read("src/util.typ"),
   name: "util",
+  old-syntax: true,
   require-all-parameters: true,
   scope: (
     util: util,
@@ -140,6 +142,7 @@ Simply import #link("src/lib.typ") and call the `circuit` function:
 #let wire-docs = tidy.parse-module(
   read("src/wire.typ"),
   name: "wire",
+  old-syntax: true,
   require-all-parameters: true,
   scope: (
     wire: wire,
@@ -161,6 +164,7 @@ Simply import #link("src/lib.typ") and call the `circuit` function:
   read("src/elements/multiplexer.typ") + "\n" +
   read("src/elements/group.typ"),
   name: "element",
+  old-syntax: true,
   scope: (
     element: element,
     circuit: circuit,
@@ -183,6 +187,7 @@ Simply import #link("src/lib.typ") and call the `circuit` function:
   read("src/elements/logic/or.typ") + "\n" +
   read("src/elements/logic/xor.typ"),
   name: "gates",
+  old-syntax: true,
   scope: (
     element: element,
     circuit: circuit,
