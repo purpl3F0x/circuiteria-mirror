@@ -1,4 +1,4 @@
-#import "@preview/cetz:0.2.2": draw, coordinate
+#import "@preview/cetz:0.3.2": draw, coordinate
 #import "../util.typ"
 
 /// Draws a group of elements

@@ -1,4 +1,4 @@
-#import "@preview/cetz:0.2.2": canvas
+#import "@preview/cetz:0.3.2": canvas
 #import "@preview/tidy:0.3.0"
 
 /// Draws a block circuit diagram
