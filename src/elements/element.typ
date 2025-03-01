@@ -1,4 +1,4 @@
-#import "@preview/cetz:0.2.2": draw, coordinate
+#import "@preview/cetz:0.3.2": draw, coordinate
 #import "ports.typ": add-ports, add-port
 #import "../util.typ"
 
@@ -88,15 +88,26 @@
     if to-side in ports-margins {
       margins = ports-margins.at(to-side)
     }
-    let used-pct = 100% - margins.at(0) - margins.at(1)
-    let used-height = height * used-pct / 100%
-    let top-margin = height * margins.at(0) / 100%
-    
-    let dy = used-height * (i + 1) / (ports.at(to-side).len() + 1)
 
-    if not auto-ports {
+    let dy
+    let top-margin
+    if to-side in ("east", "west") {
+      let used-pct = 100% - margins.at(0) - margins.at(1)
+      let used-height = height * used-pct / 100%
+      top-margin = height * margins.at(0) / 100%
+      
+      dy = used-height * (i + 1) / (ports.at(to-side).len() + 1)
+
+      if not auto-ports {
+        top-margin = 0
+        dy = ports-y.at(to)(height)
+      }
+    } else if to-side == "north" {
+      dy = 0
       top-margin = 0
-      dy = ports-y.at(to)(height)
+    } else if to-side == "south" {
+      dy = height
+      top-margin = 0
     }
     
     let (ctx, from-pos) = coordinate.resolve(ctx, from)
