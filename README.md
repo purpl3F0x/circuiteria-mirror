@@ -56,7 +56,7 @@ For more information, see the [manual](manual.pdf)
 
 To use this package, simply import [circuiteria](https://typst.app/universe/package/circuiteria) and call the `circuit` function:
 ```typ
-#import "@preview/circuiteria:0.1.0"
+#import "@preview/circuiteria:0.2.0"
 #circuiteria.circuit({
   import circuiteria: *
   ...

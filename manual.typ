@@ -103,11 +103,21 @@ This package provides a way to make beautiful block circuit diagrams using the C
 
 = Usage
 
-Simply import #link("src/lib.typ") and call the `circuit` function:
+Simply import Circuiteria and call the `circuit` function:
 #pad(left: 1em)[```typ
-#import "src/lib.typ"
-#lib.circuit({
-  import lib: *
+#import "@preview/circuiteria:0.2.0"
+#circuiteria.circuit({
+  import circuiteria: *
+  ...
+})
+```]
+
+== Project installation
+If you have installed Circuiteria directly in your project, import #link("src/lib.typ") and call the `circuit` function:
+#pad(left: 1em)[```typ
+#import "src/lib.typ" as circuiteria
+#circuiteria.circuit({
+  import circuiteria: *
   ...
 })
 ```]
