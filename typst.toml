@@ -1,7 +1,7 @@
 [package]
 name = "circuiteria"
-version = "0.1.0"
-compiler = "0.11.0"
+version = "0.2.0"
+compiler = "0.13.0"
 repository = "https://git.kb28.ch/HEL/circuiteria"
 entrypoint = "src/lib.typ"
 authors = [
@@ -11,4 +11,4 @@ categories = [ "visualization" ]
 license = "Apache-2.0"
 description = "Drawing block circuits with Typst made easy, using CeTZ"
 keywords = [ "circuit", "block", "draw" ]
-exclude = [ "gallery", "gallery.bash", "doc" ]
+exclude = [ "gallery", "justfile", "doc" ]
