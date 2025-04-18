@@ -147,7 +147,19 @@
 
   // Workaround because CeTZ needs to have all draw functions in the body
   let func = {}
-  (func, bounds) = draw-shape(elmt, bounds)
+  let res = draw-shape(elmt, bounds)
+  assert(
+    type(res) == array and res.len() == 2,
+    message: "The drawing function of element '" + elmt.id + "' did not return a function and new bounds"
+  )
+  (func, bounds) = res
+  if type(func) == function {
+    func = (func,)
+  }
+  assert(
+    type(bounds) == dictionary,
+    message: "The drawing function of element '" + elmt.id + "' did not return the correct bounds dictionary"
+  )
   func
 
   if elmt.name != none {
@@ -208,7 +220,7 @@
   ports-margins: (:),
   fill: none,
   stroke: black + 1pt,
-  id: "",
+  id: auto,
   auto-ports: true,
   ports-y: (:),
   debug: (
