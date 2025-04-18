@@ -1,5 +1,6 @@
 #import "@preview/cetz:0.3.2": draw, coordinate
-#import "util.typ": opposite-anchor
+#import "util.typ": opposite-anchor, get-port-side
+#import "elements/element.typ"
 
 /// List of valid wire styles
 /// #examples.wires
@@ -267,40 +268,70 @@
 /// - vertical (bool): Whether the name should be displayed vertically
 /// - length (number): The length of the stub
 /// - name-offset (number): The name offset, perpendicular to the stub
-#let stub(port-id, side, name: none, vertical: false, length: 1em, name-offset: 0) = {
-  let end-offset = (
-    north: (0, length),
-    east: (length, 0),
-    south: (0, -length),
-    west: (-length, 0)
-  ).at(side)
-  
-  let name-offset = (
-    north: (name-offset, length),
-    east: (length, name-offset),
-    south: (name-offset, -length),
-    west: (-length, name-offset)
-  ).at(side)
-
-  draw.line(
-    port-id,
-    (rel: end-offset, to: port-id)
-  )
-  if name != none {
-    let text-anchor = if vertical {
-      (
-        "north": "west",
-        "south": "east",
-        "west": "south",
-        "east": "north"
-      ).at(side)
-    } else { opposite-anchor(side) }
-    draw.content(
-      anchor: text-anchor,
-      padding: 0.2em,
-      angle: if vertical {90deg} else {0deg},
-      (rel: name-offset, to: port-id),
-      name
-    )
+#let stub(anchor, name: none, vertical: false, length: 1em, name-offset: 0) = {
+  if "." not in anchor {
+    panic("`anchor` must be a valid anchor of an element")
   }
+  let parts = anchor.split(".")
+  let port-id = parts.last()
+  let port-elmt-id = parts.slice(0, -1).join(".")
+
+  let pre-process = (elements, elmt) => {
+    let eid = elmt.id
+
+    if port-elmt-id not in elements {
+      panic("Unknown element " + port-elmt-id)
+    }
+    let port-elmt = elements.at(port-elmt-id)
+    let side = get-port-side(port-elmt, port-id)
+    elements.at(eid).insert("side", side)
+    return elements
+  }
+
+  let draw-func(elmt, bounds) = {
+    let side = elmt.side
+    let end-offset = (
+      north: (0, length),
+      east: (length, 0),
+      south: (0, -length),
+      west: (-length, 0)
+    ).at(side)
+    
+    let name-offset = (
+      north: (name-offset, length),
+      east: (length, name-offset),
+      south: (name-offset, -length),
+      west: (-length, name-offset)
+    ).at(side)
+
+    let shapes = ()
+    shapes += draw.line(
+      anchor,
+      (rel: end-offset, to: anchor)
+    )
+    if name != none {
+      let text-anchor = if vertical {
+        (
+          "north": "west",
+          "south": "east",
+          "west": "south",
+          "east": "north"
+        ).at(side)
+      } else { opposite-anchor(side) }
+      shapes += draw.content(
+        anchor: text-anchor,
+        padding: 0.2em,
+        angle: if vertical {90deg} else {0deg},
+        (rel: name-offset, to: anchor),
+        name
+      )
+    }
+
+    return (shapes, bounds)
+  }
+
+  return element.elmt(
+    draw-shape: draw-func,
+    pre-process: pre-process
+  )
 }

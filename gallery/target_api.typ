@@ -13,25 +13,11 @@
     ),
     debug: (ports: true)
   )
-
-  element.block(
-    size: (1, 2),
-    ports: (
-      west: (("a", "A"), "e"),
-      north: "b",
-      east: "c",
-      south: "d"
-    ),
-    pos: (
-      (offset: -1, from: "PCBuf.south"),
-      2,//(align: "e", with: "PCBuf.EN"),
-    )
-  )
   
-  /*
   wire.stub("PCBuf.CLK", name: "CLK")
   wire.stub("PCBuf.EN", name: "PCWrite")
   
+  /*
   element.multiplexer(
     pos: (
       3, (align: "in0", with: "PCBuf.PC")
