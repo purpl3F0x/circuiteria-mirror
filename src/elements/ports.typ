@@ -34,12 +34,10 @@
     angle: if name-rotate {90deg} else {0deg},
     name
   )
-  let id = elmt-id + "-port-" + port.at("id")
 
   if debug {
     draw.circle(
       pos,
-      name: id,
       radius: .1,
       stroke: none,
       fill: red
@@ -49,24 +47,24 @@
     draw.hide(draw.circle(
       pos,
       radius: 0,
-      stroke: none,
-      name: id
+      stroke: none
     ))
   }
+  draw.anchor(port.id, pos)
 }
 
 #let add-ports(
   elmt-id,
-  tl, tr, br, bl,
+  bounds,
   ports,
   ports-margins,
   debug: false
 ) = {
   let sides = (
-    "north": (tl, tr),
-    "east": (tr, br),
-    "south": (bl, br),
-    "west": (tl, bl)
+    "north": (bounds.tl, bounds.tr),
+    "east": (bounds.tr, bounds.br),
+    "south": (bounds.bl, bounds.br),
+    "west": (bounds.tl, bounds.bl)
   )
 
   if type(ports) != dictionary {

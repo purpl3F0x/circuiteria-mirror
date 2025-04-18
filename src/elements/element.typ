@@ -1,4 +1,4 @@
-#import "@preview/cetz:0.3.2": draw, coordinate
+#import "@preview/cetz:0.3.2": draw, coordinate, matrix, vector
 #import "ports.typ": add-ports, add-port
 #import "../util.typ"
 
@@ -13,9 +13,162 @@
   panic("Could not find port with id " + str(id))
 }
 
-#let default-draw-shape(id, tl, tr, br, bl, fill, stroke) = {
-  return ({}, tl, tr, br, bl)
+#let local-to-global(origin, u, v, points) = {
+  return points-real = points.map(p => {
+    let (pu, pv) = p
+    return vector.add(
+      origin,
+      vector.add(
+        vector.scale(u, pu),
+        vector.scale(v, pv)
+      )
+    )
+  })
 }
+
+#let default-draw-shape(elmt, bounds) = {
+  return ({}, bounds)
+}
+
+#let default-pre-process(elements, element) = {
+  return elements
+}
+
+#let resolve-offset(ctx, offset, from, axis) = {
+  let (ctx, pos) = coordinate.resolve(
+    ctx,
+    (rel: offset, to: from)
+  )
+  return pos.at(axis)
+}
+
+#let resolve-align(ctx, elmt, align, with, axis) = {
+  let (align-side, i) = find-port(elmt.ports, align)
+  let margins = (0%, 0%)
+  if align-side in elmt.ports-margins {
+    margins = elmt.ports-margins.at(align-side)
+  }
+
+  let parallel-sides = (
+    ("north", "south"),
+    ("west", "east")
+  ).at(axis)
+
+  let ortho-sides = (
+    ("west", "east"),
+    ("north", "south")
+  ).at(axis)
+
+  let dl
+  let start-margin
+  let len = elmt.size.at(axis)
+  if align-side in parallel-sides {
+    let used-pct = 100% - margins.at(0) - margins.at(1)
+    let used-len = len * used-pct / 100%
+    start-margin = len * margins.at(0) / 100%
+    
+    dl = used-len * (i + 1) / (elmt.ports.at(align-side).len() + 1)
+
+    if not elmt.auto-ports {
+      start-margin = 0
+      dl = elmt.ports-pos.at(with)(len)
+    }
+  } else if align-side == ortho-sides.first() {
+    dl = 0
+    start-margin = 0
+  } else {
+    dl = len
+    start-margin = 0
+  }
+
+  if axis == 1 {
+    dl = len - dl
+  }
+  
+  let (ctx, with-pos) = coordinate.resolve(ctx, with)
+  return with-pos.at(axis) - dl + start-margin
+}
+
+#let resolve-coordinate(ctx, elmt, coord, axis) = {
+  if type(coord) == dictionary {
+    let offset = coord.at("offset", default: none)
+    let from = coord.at("from", default: none)
+    let align = coord.at("align", default: none)
+    let with = coord.at("with", default: none)
+
+    if none not in (offset, from) {
+      if type(offset) != array {
+        let a = (0, 0)
+        a.at(axis) = offset
+        offset = a
+      }
+      return resolve-offset(ctx, offset, from, axis)
+      
+    } else if none not in (align, with) {
+      return resolve-align(ctx, elmt, align, with, axis)
+    } else {
+      panic("Dictionnary must either provide both 'offset' and 'from', or 'align' and 'with'")
+    }
+  }
+  if type(coord) not in (int, float, length) {
+    panic("Invalid " + "xy".at(axis) + " coordinate: " + repr(coord))
+  }
+  return coord
+}
+
+#let make-bounds(x, y, w, h) = {
+  let w2 = w / 2
+  let h2 = h / 2
+  
+  return (
+    bl: (x, y),
+    tl: (x, y + h),
+    tr: (x + w, y + h),
+    br: (x + w, y),
+    center: (x + w2, y + h2),
+    b: (x + w2, y),
+    t: (x + w2, y + h),
+    l: (x, y + h2),
+    r: (x + w, y + h2),
+  )
+}
+
+#let render(draw-shape, elmt) = draw.group(name: elmt.id, ctx => {
+  let width = elmt.size.first()
+  let height = elmt.size.last()
+
+  let x = elmt.pos.first()
+  let y = elmt.pos.last()
+
+  x = resolve-coordinate(ctx, elmt, x, 0)
+  y = resolve-coordinate(ctx, elmt, y, 1)
+
+  let bounds = make-bounds(x, y, width, height)
+
+  // Workaround because CeTZ needs to have all draw functions in the body
+  let func = {}
+  (func, bounds) = draw-shape(elmt, bounds)
+  func
+
+  if elmt.name != none {
+    draw.content(
+      (name: elmt.id, anchor: elmt.name-anchor),
+      anchor: if elmt.name-anchor in util.valid-anchors {elmt.name-anchor} else {"center"},
+      padding: 0.5em,
+      align(center)[*#elmt.name*]
+    )
+  }
+
+  if elmt.auto-ports {
+    add-ports(
+      elmt.id,
+      bounds,
+      elmt.ports,
+      elmt.ports-margins,
+      debug: elmt.debug.ports
+    )
+  }
+})
 
 /// Draws an element
 /// - draw-shape (function): Draw function
@@ -46,10 +199,9 @@
 ///     - `ports`: if true, shows dots on all ports of the element
 #let elmt(
   draw-shape: default-draw-shape,
-  x: none,
-  y: none,
-  w: none,
-  h: none,
+  pre-process: default-pre-process,
+  pos: (0, 0),
+  size: (1, 1),
   name: none,
   name-anchor: "center",
   ports: (:),
@@ -62,84 +214,42 @@
   debug: (
     ports: false
   )
-) = draw.get-ctx(ctx => {
-  let width = w
-  let height = h
-
-  let x = x
-  let y = y
-  if x == none { panic("Parameter x must be set") }
-  if y == none { panic("Parameter y must be set") }
-  if w == none { panic("Parameter w must be set") }
-  if h == none { panic("Parameter h must be set") }
-
-  if (type(x) == dictionary) {
-    let offset = x.rel
-    let to = x.to
-    let (ctx, to-pos) = coordinate.resolve(ctx, (rel: (offset, 0), to: to))
-    x = to-pos.at(0)
-  }
-  
-  if (type(y) == dictionary) {
-    let from = y.from
-    let to = y.to
-    let (to-side, i) = find-port(ports, to)
-    let margins = (0%, 0%)
-    if to-side in ports-margins {
-      margins = ports-margins.at(to-side)
+) = {
+  for (key, side-ports) in ports.pairs() {
+    if type(side-ports) == str {
+      side-ports = ((id: side-ports),)
+    } else if type(side-ports) == dictionary {
+      side-ports = (side-ports,)
     }
 
-    let dy
-    let top-margin
-    if to-side in ("east", "west") {
-      let used-pct = 100% - margins.at(0) - margins.at(1)
-      let used-height = height * used-pct / 100%
-      top-margin = height * margins.at(0) / 100%
-      
-      dy = used-height * (i + 1) / (ports.at(to-side).len() + 1)
-
-      if not auto-ports {
-        top-margin = 0
-        dy = ports-y.at(to)(height)
+    for (i, port) in side-ports.enumerate() {
+      if type(port) == array {
+        side-ports.at(i) = (
+          id: port.at(0, default: ""),
+          name: port.at(1, default: "")
+        )
+      } else if type(port) == str {
+        side-ports.at(i) = (id: port)
       }
-    } else if to-side == "north" {
-      dy = 0
-      top-margin = 0
-    } else if to-side == "south" {
-      dy = height
-      top-margin = 0
     }
-    
-    let (ctx, from-pos) = coordinate.resolve(ctx, from)
-    y = from-pos.at(1) + dy - height + top-margin
+    ports.at(key) = side-ports
   }
 
-  let tl = (x, y + height)
-  let tr = (x + width, y + height)
-  let br = (x + width, y)
-  let bl = (x, y)
 
-  // Workaround because CeTZ needs to have all draw functions in the body
-  let func = {}
-  (func, tl, tr, br, bl) = draw-shape(id, tl, tr, br, bl, fill, stroke)
-  func
-
-  if (name != none) {
-    draw.content(
-      (name: id, anchor: name-anchor),
-      anchor: if name-anchor in util.valid-anchors {name-anchor} else {"center"},
-      padding: 0.5em,
-      align(center)[*#name*]
-    )
-  }
-
-  if auto-ports {
-    add-ports(
-      id,
-      tl, tr, br, bl,
-      ports,
-      ports-margins,
-      debug: debug.ports
-    )
-  }
-})
+  return ((
+    id: id,
+    draw: render.with(draw-shape),
+    pre-process: pre-process,
+    pos: pos,
+    size: size,
+    name: name,
+    name-anchor: name-anchor,
+    ports: ports,
+    ports-margins: ports-margins,
+    fill: fill,
+    stroke: stroke,
+    auto-ports: auto-ports,
+    ports-y: ports-y,
+    debug: debug
+  ),)
+}
