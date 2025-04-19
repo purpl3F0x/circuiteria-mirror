@@ -17,7 +17,7 @@
   wire.stub("PCBuf.CLK", name: "CLK")
   wire.stub("PCBuf.EN", name: "PCWrite")
   
-  /*
+  
   element.multiplexer(
     pos: (
       3, (align: "in0", with: "PCBuf.PC")
@@ -25,9 +25,10 @@
     size: (1, 2),
     id: "AdrSrc-MP",
     fill: util.colors.orange,
-    entries: 2
+    entries: 2,
+    debug: (ports: true)
   )
-  wire.wire(
+  /*wire.wire(
     "PCBuf.PC",
     "AdrSrc-MP.in0",
     id: "wPCBuf-InstDataMgr",

@@ -19,6 +19,7 @@
 #let block(
   ..args
 ) = element.elmt(
+  cls: "block",
   draw-shape: draw-shape,
   ..args
 )

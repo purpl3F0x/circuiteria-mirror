@@ -1,5 +1,5 @@
 #import "@preview/cetz:0.3.2": draw, coordinate, matrix, vector
-#import "ports.typ": add-ports, add-port
+#import "ports.typ": add-ports, add-port, get-port-pos, get-port-idx
 #import "../util.typ"
 
 #let find-port(ports, id) = {
@@ -10,7 +10,7 @@
       }
     }
   }
-  panic("Could not find port with id " + str(id))
+  panic("Could not find port with id '" + str(id) + "'")
 }
 
 #let local-to-global(origin, u, v, points) = {
@@ -42,7 +42,7 @@
   return pos.at(axis)
 }
 
-#let resolve-align(ctx, elmt, align, with, axis) = {
+#let resolve-align(ctx, elmt, bounds, align, with, axis) = {
   let (align-side, i) = find-port(elmt.ports, align)
   let margins = (0%, 0%)
   if align-side in elmt.ports-margins {
@@ -67,12 +67,12 @@
     let used-len = len * used-pct / 100%
     start-margin = len * margins.at(0) / 100%
     
-    dl = used-len * (i + 1) / (elmt.ports.at(align-side).len() + 1)
-
-    if not elmt.auto-ports {
+    //dl = used-len * (i + 1) / (elmt.ports.at(align-side).len() + 1)
+    dl = get-port-pos(elmt, bounds, align-side, align, get-port-idx(elmt, align, side: align-side))
+    /*if not elmt.auto-ports {
       start-margin = 0
-      dl = elmt.ports-pos.at(with)(len)
-    }
+      dl = elmt.ports-pos.at(align)(len)
+    }*/
   } else if align-side == ortho-sides.first() {
     dl = 0
     start-margin = 0
@@ -89,7 +89,7 @@
   return with-pos.at(axis) - dl + start-margin
 }
 
-#let resolve-coordinate(ctx, elmt, coord, axis) = {
+#let resolve-coordinate(ctx, elmt, bounds, coord, axis) = {
   if type(coord) == dictionary {
     let offset = coord.at("offset", default: none)
     let from = coord.at("from", default: none)
@@ -105,7 +105,7 @@
       return resolve-offset(ctx, offset, from, axis)
       
     } else if none not in (align, with) {
-      return resolve-align(ctx, elmt, align, with, axis)
+      return resolve-align(ctx, elmt, bounds, align, with, axis)
     } else {
       panic("Dictionnary must either provide both 'offset' and 'from', or 'align' and 'with'")
     }
@@ -116,11 +116,11 @@
   return coord
 }
 
-#let make-bounds(x, y, w, h) = {
+#let make-bounds(elmt, x, y, w, h) = {
   let w2 = w / 2
   let h2 = h / 2
   
-  return (
+  let bounds = (
     bl: (x, y),
     tl: (x, y + h),
     tr: (x + w, y + h),
@@ -131,6 +131,33 @@
     l: (x, y + h2),
     r: (x + w, y + h2),
   )
+  bounds += (
+    sides: (
+      north: (bounds.tl, bounds.tr),
+      south: (bounds.bl, bounds.br),
+      west: (bounds.tl, bounds.bl),
+      east: (bounds.tr, bounds.br),
+    ),
+    lengths: (
+      north: (bounds.tr.at(0) - bounds.tl.at(0)),
+      south: (bounds.br.at(0) - bounds.bl.at(0)),
+      west: (bounds.tl.at(1) - bounds.bl.at(1)),
+      east: (bounds.tr.at(1) - bounds.br.at(1)),
+    ),
+    ports: (:)
+  )
+  for (side, props) in bounds.sides.pairs() {
+    let props2 = props
+    if side in elmt.ports-margins {
+      let (pt0, pt1) = props
+      let margins = ports-margins.at(side)
+      a = (pt0, margins.at(0), pt1)
+      b = (pt0, 100% - margins.at(1), pt1)
+      props2 = (a, b)
+    }
+    bounds.ports.insert(side, props2)
+  }
+  return bounds
 }
 
 #let render(draw-shape, elmt) = draw.group(name: elmt.id, ctx => {
@@ -140,10 +167,10 @@
   let x = elmt.pos.first()
   let y = elmt.pos.last()
 
-  x = resolve-coordinate(ctx, elmt, x, 0)
-  y = resolve-coordinate(ctx, elmt, y, 1)
-
-  let bounds = make-bounds(x, y, width, height)
+  let bounds = make-bounds(elmt, 0, 0, width, height)
+  x = resolve-coordinate(ctx, elmt, bounds, x, 0)
+  y = resolve-coordinate(ctx, elmt, bounds, y, 1)
+  bounds = make-bounds(elmt, x, y, width, height)
 
   // Workaround because CeTZ needs to have all draw functions in the body
   let func = {}
@@ -171,15 +198,7 @@
     )
   }
 
-  if elmt.auto-ports {
-    add-ports(
-      elmt.id,
-      bounds,
-      elmt.ports,
-      elmt.ports-margins,
-      debug: elmt.debug.ports
-    )
-  }
+  add-ports(elmt, bounds)
 })
 
 /// Draws an element
@@ -210,6 +229,7 @@
 ///   Supported fields include:
 ///     - `ports`: if true, shows dots on all ports of the element
 #let elmt(
+  cls: "element",
   draw-shape: default-draw-shape,
   pre-process: default-pre-process,
   pos: (0, 0),
@@ -221,11 +241,11 @@
   fill: none,
   stroke: black + 1pt,
   id: auto,
-  auto-ports: true,
-  ports-y: (:),
+  ports-pos: auto,
   debug: (
     ports: false
-  )
+  ),
+  extra: (:)
 ) = {
   for (key, side-ports) in ports.pairs() {
     if type(side-ports) == str {
@@ -249,6 +269,7 @@
 
 
   return ((
+    cls: cls,
     id: id,
     draw: render.with(draw-shape),
     pre-process: pre-process,
@@ -260,8 +281,7 @@
     ports-margins: ports-margins,
     fill: fill,
     stroke: stroke,
-    auto-ports: auto-ports,
-    ports-y: ports-y,
+    ports-pos: ports-pos,
     debug: debug
-  ),)
+  ) + extra,)
 }

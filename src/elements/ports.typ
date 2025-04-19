@@ -1,6 +1,74 @@
 #import "@preview/cetz:0.3.2": draw
 #import "../util.typ": rotate-anchor
 
+#let get-port-side(elmt, port) = {
+  for (side, ports) in elmt.ports {
+    for p in ports {
+      if p.id == port {
+        return side
+      }
+    }
+  }
+  panic("Unknown port " + port + " on element " + element.id)
+}
+
+#let get-port-idx(elmt, port, side: auto) = {
+  if side == auto {
+    side = get-port-side(elmt, port)
+  }
+  assert(
+    side in elmt.ports,
+    message: "No ports on side '" + side + "' of element '" + elmt.id + "'"
+  )
+  let i = elmt.ports.at(side).position(p => p.id == port)
+  assert(
+    i != none,
+    message: "Could not find port '" + port + "' on side '" + side + "' of element '" + elmt.id + "'"
+  )
+  return i
+}
+
+#let get-port-pos(elmt, bounds, side, port, port-i) = {
+  let (pt0, pt1) = bounds.ports.at(side)
+  let side-len = if side in ("north", "south") {
+    pt1.at(0) - pt0.at(0)
+  } else {
+    pt0.at(1) - pt1.at(1)
+  }
+
+  let offset = if (
+    elmt.ports-pos == auto or
+    elmt.ports-pos.at(side, default: auto) == auto
+  ) {
+    let space = 100% / (elmt.ports.at(side, default: ()).len() + 1)
+    (port-i + 1) * space
+  } else {
+    assert(
+      side in elmt.ports-pos,
+      message: "Could not reliably compute port position (missing side)"
+    )
+    let side-pos = elmt.ports-pos.at(side)
+    if type(side-pos) == function {
+      (side-pos)(side-len, port-i)
+    } else if type(side-pos) == array {
+      (side-pos.at(i))(side-len)
+    } else if type(side-pos) == dictionary {
+      assert(
+        port in side-pos,
+        message: "Could not reliably compute port position (missing port)"
+      )
+      (side-pos.at(port))(side-len)
+    } else {
+      panic("Could not reliably compute port position (invalid type)")
+    }
+  }
+
+  if type(offset) == ratio {
+    offset = offset * side-len / 100%
+  }
+  return offset
+}
+
 #let add-port(
   elmt-id, side, port, pos,
   prev: none,
@@ -54,46 +122,41 @@
 }
 
 #let add-ports(
-  elmt-id,
-  bounds,
-  ports,
-  ports-margins,
-  debug: false
+  elmt,
+  bounds
 ) = {
-  let sides = (
-    "north": (bounds.tl, bounds.tr),
-    "east": (bounds.tr, bounds.br),
-    "south": (bounds.bl, bounds.br),
-    "west": (bounds.tl, bounds.bl)
-  )
+  let debug = elmt.debug.ports
 
-  if type(ports) != dictionary {
+  if type(elmt.ports) != dictionary {
     return
   }
 
-  for (side, props) in sides {
-    let side-ports = ports.at(side, default: ())
+  for (side, props) in bounds.ports {
+    let side-ports = elmt.ports.at(side, default: ())
     let space = 100% / (side-ports.len() + 1)
-
+    
+    let (pt0, pt1) = props
+    let side-len = if side in ("north", "south") {
+      pt1.at(0) - pt0.at(0)
+    } else {
+      pt0.at(1) - pt1.at(1)
+    }
     for (i, port) in side-ports.enumerate() {
-      let pct = (i + 1) * space
-      let pt0 = props.at(0)
-      let pt1 = props.at(1)
+      let offset = get-port-pos(elmt, bounds, side, port, i)
 
-      if side in ports-margins {
-        let (a, b) = (pt0, pt1)
-        let margins = ports-margins.at(side)
-        a = (pt0, margins.at(0), pt1)
-        b = (pt0, 100% - margins.at(1), pt1)
-        pt0 = a
-        pt1 = b
+      let pos = (pt0, offset, pt1)
+      let offset-prev = if type(offset) == ratio {
+        offset - space / 2
+      } else {
+        offset - space * side-len / 200%
       }
-      
-      let pos = (pt0, pct, pt1)
-      let pct-prev = (i + 0.5) * space
-      let pct-next = (i + 1.5) * space
-      let pos-prev = (pt0, pct-prev, pt1)
-      let pos-next = (pt0, pct-next, pt1)
+      let offset-next = if type(offset) == ratio {
+        offset + space / 2
+      } else {
+        offset + space * side-len / 200%
+      }
+      let pos-prev = (pt0, offset-prev, pt1)
+      let pos-next = (pt0, offset-next, pt1)
 
       if port.at("small", default: false) {
         pos-prev = (pos, 4pt, pt0)
@@ -101,7 +164,7 @@
       }
 
       add-port(
-        elmt-id,
+        elmt.id,
         side,
         port,
         pos,

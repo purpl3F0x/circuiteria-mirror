@@ -74,14 +74,3 @@
   "center", "north", "east", "west", "south",
   "north-east", "north-west", "south-east", "south-west"
 )
-
-#let get-port-side(element, port) = {
-  for (side, ports) in element.ports {
-    for p in ports {
-      if p.id == port {
-        return side
-      }
-    }
-  }
-  panic("Unknown port " + port + " on element " + element.id)
-}
