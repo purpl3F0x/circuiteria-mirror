@@ -9,7 +9,9 @@
       }
     }
   }
-  panic("Unknown port " + port + " on element " + elmt.id)
+  panic(
+    "Unknown port '" + port + "' on element '" + elmt.id + "', could not automatically determine side"
+  )
 }
 
 #let get-port-idx(elmt, port, side: auto) = {

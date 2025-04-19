@@ -2,6 +2,7 @@
 #import "@preview/cetz:0.3.4": draw
 
 #set text(font: "Source Sans 3")
+#set page(width: auto, height: auto, margin: .5cm)
 
 #circuit({
   element.block(
@@ -184,7 +185,6 @@
   )
   wire.stub("ALU.north", side: "north")
 
-  /*
   element.block(
     pos: (
       26, (align: "in", with: "ALU.out")
@@ -202,7 +202,7 @@
   wire.wire(
     "ALU.out",
     "OutBuf.in",
-    id: "wALU-OutBuf"
+    id: "wALU-OutBuf",
     name: "ALUResult",
     bus: true
   )
@@ -216,12 +216,12 @@
     fill: util.colors.orange,
     entries: 3
   )
-  wire.stub("Res-MP.north", name: "ResultSrc")
+  wire.stub("Res-MP.north", side: "north", name: "ResultSrc")
   wire.stub("Res-MP.in2")
   wire.wire(
     "OutBuf.out",
     "Res-MP.in0",
-    id: "wOutBuf-ResMP"
+    id: "wOutBuf-ResMP",
     name: "ALUOut",
     bus: true
   )
@@ -229,7 +229,7 @@
   wire.wire(
     "Extender.out",
     "ALU.in2",
-    id: "wExt-ALU"
+    id: "wExt-ALU",
     name: ("ImmExt", "SrcB"),
     bus: true,
     style: "zigzag",
@@ -239,7 +239,7 @@
   wire.wire(
     "InstDataMgr.RD",
     "Res-MP.in1",
-    id: "wInstDataMgr-ResMP"
+    id: "wInstDataMgr-ResMP",
     style: "dodge",
     dodge-y: -4,
     dodge-sides: ("east", "west"),
@@ -250,7 +250,7 @@
   wire.wire(
     "Res-MP.out",
     "AdrSrc-MP.in1",
-    id: "wResMP-AdrSrc"
+    id: "wResMP-AdrSrc",
     style: "dodge",
     dodge-y: -5,
     dodge-sides: ("east", "west"),
@@ -261,7 +261,7 @@
   wire.wire(
     "Res-MP.out",
     "RegFile.WD3",
-    id: "wResMP-RegFile"
+    id: "wResMP-RegFile",
     style: "dodge",
     dodge-y: -5,
     dodge-sides: ("east", "west"),
@@ -272,7 +272,7 @@
   wire.wire(
     "Res-MP.out",
     "PCBuf.PCNext",
-    id: "wResMP-PCBuf"
+    id: "wResMP-PCBuf",
     style: "dodge",
     dodge-y: -5,
     dodge-sides: ("east", "west"),
@@ -283,5 +283,4 @@
 
   wire.intersection("wResMP-RegFile.dodge-end", radius: .2)
   wire.intersection("wResMP-AdrSrc.dodge-end", radius: .2)
-  */
 })
