@@ -5,27 +5,33 @@
 
 #let draw-shape(elmt, bounds) = {
   let margin = (100% - elmt.l-ratio) / 2
-  let tr2 = (bounds.tr, margin, bounds.br)
-  let br2 = (bounds.br, margin, bounds.tr)
-  let f = draw.group(name: elmt.id, {
+  let tr2 = util.lerp(bounds.tr, margin, bounds.br)
+  let br2 = util.lerp(bounds.br, margin, bounds.tr)
+  let bounds2 = element.complete-bounds(elmt, (
+    tl: bounds.tl,
+    bl: bounds.bl,
+    tr: tr2,
+    br: br2,
+  ))
+  let f = {
     draw.merge-path(
       inset: 0.5em,
       fill: elmt.fill,
       stroke: elmt.stroke,
       close: true,
-      draw.line(bounds.tl, tr2, br2, bounds.bl)
+      draw.line(bounds2.tl, bounds2.tr, bounds2.br, bounds2.bl)
     )
-    draw.anchor("north", (bounds.tl, 50%, tr2))
-    draw.anchor("south", (bounds.bl, 50%, br2))
-    draw.anchor("west", (bounds.tl, 50%, bounds.bl))
-    draw.anchor("east", (tr2, 50%, br2))
-    draw.anchor("north-west", bounds.tl)
-    draw.anchor("north-east", tr2)
-    draw.anchor("south-east", br2)
-    draw.anchor("south-west", bounds.bl)
-  })
+    draw.anchor("north", bounds2.t)
+    draw.anchor("south", bounds2.b)
+    draw.anchor("west", bounds2.l)
+    draw.anchor("east", bounds2.r)
+    draw.anchor("north-west", bounds2.tl)
+    draw.anchor("north-east", bounds2.tr)
+    draw.anchor("south-east", bounds2.br)
+    draw.anchor("south-west", bounds2.bl)
+  }
 
-  return (f, bounds)
+  return (f, bounds2)
 }
 
 /// Draws a multiplexer

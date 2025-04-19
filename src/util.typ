@@ -74,3 +74,10 @@
   "center", "north", "east", "west", "south",
   "north-east", "north-west", "south-east", "south-west"
 )
+
+#let lerp(pt0, ratio, pt1) = {
+  return (
+    (pt1.at(0) - pt0.at(0)) * ratio / 100% + pt0.at(0),
+    (pt1.at(1) - pt0.at(1)) * ratio / 100% + pt0.at(1)
+  )
+}

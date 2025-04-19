@@ -116,22 +116,29 @@
   return coord
 }
 
-#let make-bounds(elmt, x, y, w, h) = {
-  let w2 = w / 2
-  let h2 = h / 2
-  
-  let bounds = (
-    bl: (x, y),
-    tl: (x, y + h),
-    tr: (x + w, y + h),
-    br: (x + w, y),
-    center: (x + w2, y + h2),
-    b: (x + w2, y),
-    t: (x + w2, y + h),
-    l: (x, y + h2),
-    r: (x + w, y + h2),
-  )
+#let complete-bounds(elmt, bounds) = {
+  let b = bounds
   bounds += (
+    center: (
+      (b.br.at(0) + b.tl.at(0))/2,
+      (b.br.at(1) + b.tl.at(1))/2
+    ),
+    b: (
+      (b.br.at(0) + b.bl.at(0))/2,
+      (b.br.at(1) + b.bl.at(1))/2
+    ),
+    t: (
+      (b.tr.at(0) + b.tl.at(0))/2,
+      (b.tr.at(1) + b.tl.at(1))/2
+    ),
+    l: (
+      (b.bl.at(0) + b.tl.at(0))/2,
+      (b.bl.at(1) + b.tl.at(1))/2
+    ),
+    r: (
+      (b.br.at(0) + b.tr.at(0))/2,
+      (b.br.at(1) + b.tr.at(1))/2
+    ),
     sides: (
       north: (bounds.tl, bounds.tr),
       south: (bounds.bl, bounds.br),
@@ -158,6 +165,19 @@
     bounds.ports.insert(side, props2)
   }
   return bounds
+}
+
+#let make-bounds(elmt, x, y, w, h) = {
+  let w2 = w / 2
+  let h2 = h / 2
+  
+  let bounds = (
+    bl: (x, y),
+    tl: (x, y + h),
+    tr: (x + w, y + h),
+    br: (x + w, y),
+  )
+  return complete-bounds(elmt, bounds)
 }
 
 #let render(draw-shape, elmt) = draw.group(name: elmt.id, ctx => {

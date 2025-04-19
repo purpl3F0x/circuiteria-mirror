@@ -9,7 +9,7 @@
       }
     }
   }
-  panic("Unknown port " + port + " on element " + element.id)
+  panic("Unknown port " + port + " on element " + elmt.id)
 }
 
 #let get-port-idx(elmt, port, side: auto) = {

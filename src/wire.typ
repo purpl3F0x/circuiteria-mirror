@@ -130,10 +130,11 @@
 /// - dodge-sides (array): The start and end sides (going out of the connected element) of the wire (only with style "dodge")
 /// - dodge-margins (array): The start and end margins (i.e. space before dodging) of the wire (only with style "dodge")
 #let wire(
-  id, pts,
+  pt0,
+  pt1,
+  id: none,
   bus: false,
   name: none,
-  name-pos: "middle",
   slice: none,
   color: black,
   dashed: false,
@@ -145,15 +146,14 @@
   zigzag-dir: "vertical",
   dodge-y: 0,
   dodge-sides: ("east", "west"),
-  dodge-margins: (5%, 5%)
+  dodge-margins: (5%, 5%),
+  ..args
 ) = draw.get-ctx(ctx => {
   if not style in wire-styles {
     panic("Invalid wire style '" + style + "'")
   }
 
-  if pts.len() != 2 {
-    panic("Wrong number of points (got " + str(pts.len()) + " instead of 2)")
-  }
+  let pts = (pt0, pt1)
   
   let stroke = (
     paint: color,
@@ -218,7 +218,7 @@
     let names = ()
     
     if type(name) == str {
-      names = ((name, name-pos),)
+      names = ((name, "middle"),)
       
     } else if type(name) == array {
       names = (
@@ -228,6 +228,9 @@
     }
 
     for (name, pos) in names {
+      if name == none {
+        continue
+      }
       let point
       let anchor
       
@@ -269,7 +272,7 @@
 /// - vertical (bool): Whether the name should be displayed vertically
 /// - length (number): The length of the stub
 /// - name-offset (number): The name offset, perpendicular to the stub
-#let stub(anchor, name: none, vertical: false, length: 1em, name-offset: 0) = {
+#let stub(anchor, side: auto, name: none, vertical: false, length: 1em, name-offset: 0) = {
   if "." not in anchor {
     panic("`anchor` must be a valid anchor of an element")
   }
@@ -280,11 +283,14 @@
   let pre-process = (elements, elmt) => {
     let eid = elmt.id
 
-    if port-elmt-id not in elements {
-      panic("Unknown element " + port-elmt-id)
+    let side = side
+    if side == auto {
+      if port-elmt-id not in elements {
+        panic("Unknown element " + port-elmt-id)
+      }
+      let port-elmt = elements.at(port-elmt-id)
+      side = get-port-side(port-elmt, port-id)
     }
-    let port-elmt = elements.at(port-elmt-id)
-    let side = get-port-side(port-elmt, port-id)
     elements.at(eid).insert("side", side)
     return elements
   }

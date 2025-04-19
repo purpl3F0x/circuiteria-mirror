@@ -1,5 +1,8 @@
 #import "../src/lib.typ": *
 #import "@preview/cetz:0.3.4": draw
+
+#set text(font: "Source Sans 3")
+
 #circuit({
   element.block(
     size: (1.5, 2.2),
@@ -10,13 +13,11 @@
       north: (id: "CLK", clock: true),
       east: "PC",
       south: (("EN", "EN"),)
-    ),
-    debug: (ports: true)
+    )
   )
   
   wire.stub("PCBuf.CLK", name: "CLK")
   wire.stub("PCBuf.EN", name: "PCWrite")
-  
   
   element.multiplexer(
     pos: (
@@ -25,18 +26,18 @@
     size: (1, 2),
     id: "AdrSrc-MP",
     fill: util.colors.orange,
-    entries: 2,
-    debug: (ports: true)
+    entries: 2
   )
-  /*wire.wire(
+  wire.wire(
     "PCBuf.PC",
     "AdrSrc-MP.in0",
     id: "wPCBuf-InstDataMgr",
     name: "PC",
     bus: true
   )
-  wire.stub("AdrSrc-MP.north", name: "AdrSrc")
+  wire.stub("AdrSrc-MP.north", side: "north", name: "AdrSrc")
   
+  /*
   element.block(
     pos: (
       6, (align: "A", with: "AdrSrc-MP.out")
