@@ -37,7 +37,6 @@
   )
   wire.stub("AdrSrc-MP.north", side: "north", name: "AdrSrc")
   
-  /*
   element.block(
     pos: (
       6, (align: "A", with: "AdrSrc-MP.out")
@@ -78,6 +77,7 @@
   wire.stub("InstDataMgr.IRWrite")
   wire.stub("InstDataMgr.WD")
 
+  /*
   element.block(
     pos: (
       15, (align: "WD3", with: "InstDataMgr.RD")

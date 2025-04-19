@@ -157,9 +157,9 @@
     let props2 = props
     if side in elmt.ports-margins {
       let (pt0, pt1) = props
-      let margins = ports-margins.at(side)
-      a = (pt0, margins.at(0), pt1)
-      b = (pt0, 100% - margins.at(1), pt1)
+      let margins = elmt.ports-margins.at(side)
+      let a = util.lerp(pt0, margins.at(0), pt1)
+      let b = util.lerp(pt0, 100% - margins.at(1), pt1)
       props2 = (a, b)
     }
     bounds.ports.insert(side, props2)
