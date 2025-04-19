@@ -77,7 +77,6 @@
   wire.stub("InstDataMgr.IRWrite")
   wire.stub("InstDataMgr.WD")
 
-  /*
   element.block(
     pos: (
       15, (align: "WD3", with: "InstDataMgr.RD")
@@ -114,7 +113,8 @@
     pos: (15, -3.5),
     size: (3, 1),
     id: "Extender",
-    fill: util.colors.green
+    fill: util.colors.green,
+    debug: (bounds: true, ports: true)
   )
   wire.wire(
     "Extender.north",
@@ -126,6 +126,7 @@
     bus: true
   )
 
+  /*
   let mid = ("InstDataMgr.east", 50%, "RegFile.west")
   wire.wire(
     "InstDataMgr.Instr",

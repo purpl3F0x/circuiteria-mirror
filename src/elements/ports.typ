@@ -125,7 +125,7 @@
   elmt,
   bounds
 ) = {
-  let debug = elmt.debug.ports
+  let debug = elmt.debug.at("ports", default: false)
 
   if type(elmt.ports) != dictionary {
     return

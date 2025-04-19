@@ -13,23 +13,12 @@
     tr: tr2,
     br: br2,
   ))
-  let f = {
-    draw.merge-path(
-      inset: 0.5em,
-      fill: elmt.fill,
-      stroke: elmt.stroke,
-      close: true,
-      draw.line(bounds2.tl, bounds2.tr, bounds2.br, bounds2.bl)
-    )
-    draw.anchor("north", bounds2.t)
-    draw.anchor("south", bounds2.b)
-    draw.anchor("west", bounds2.l)
-    draw.anchor("east", bounds2.r)
-    draw.anchor("north-west", bounds2.tl)
-    draw.anchor("north-east", bounds2.tr)
-    draw.anchor("south-east", bounds2.br)
-    draw.anchor("south-west", bounds2.bl)
-  }
+  let f = draw.line(
+    bounds2.tl, bounds2.tr, bounds2.br, bounds2.bl,
+    close: true,
+    fill: elmt.fill,
+    stroke: elmt.stroke
+  )
 
   return (f, bounds2)
 }

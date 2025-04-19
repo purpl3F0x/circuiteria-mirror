@@ -209,6 +209,15 @@
   )
   func
 
+  draw.anchor("north", bounds.t)
+  draw.anchor("south", bounds.b)
+  draw.anchor("west", bounds.l)
+  draw.anchor("east", bounds.r)
+  draw.anchor("north-west", bounds.tl)
+  draw.anchor("north-east", bounds.tr)
+  draw.anchor("south-east", bounds.br)
+  draw.anchor("south-west", bounds.bl)
+
   if elmt.name != none {
     draw.content(
       (name: elmt.id, anchor: elmt.name-anchor),
@@ -219,6 +228,14 @@
   }
 
   add-ports(elmt, bounds)
+
+  if elmt.debug.bounds {
+    draw.line(
+      bounds.tl, bounds.tr, bounds.br, bounds.bl,
+      stroke: red,
+      close: true
+    )
+  }
 })
 
 /// Draws an element
@@ -263,6 +280,7 @@
   id: auto,
   ports-pos: auto,
   debug: (
+    bounds: false,
     ports: false
   ),
   extra: (:)
@@ -286,7 +304,6 @@
     }
     ports.at(key) = side-ports
   }
-
 
   return ((
     cls: cls,
