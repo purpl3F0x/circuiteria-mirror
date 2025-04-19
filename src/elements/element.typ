@@ -10,7 +10,7 @@
       }
     }
   }
-  panic("Could not find port with id '" + str(id) + "'")
+  panic("Could not find port with id '" + str(id) + "' in ports " + repr(ports))
 }
 
 #let local-to-global(origin, u, v, points) = {

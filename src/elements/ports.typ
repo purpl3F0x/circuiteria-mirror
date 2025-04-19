@@ -142,7 +142,7 @@
       pt0.at(1) - pt1.at(1)
     }
     for (i, port) in side-ports.enumerate() {
-      let offset = get-port-pos(elmt, bounds, side, port, i)
+      let offset = get-port-pos(elmt, bounds, side, port.id, i)
 
       let pos = (pt0, offset, pt1)
       let offset-prev = if type(offset) == ratio {

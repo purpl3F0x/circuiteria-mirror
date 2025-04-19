@@ -113,8 +113,7 @@
     pos: (15, -3.5),
     size: (3, 1),
     id: "Extender",
-    fill: util.colors.green,
-    debug: (bounds: true, ports: true)
+    fill: util.colors.green
   )
   wire.wire(
     "Extender.north",
@@ -126,12 +125,12 @@
     bus: true
   )
 
-  /*
+  
   let mid = ("InstDataMgr.east", 50%, "RegFile.west")
   wire.wire(
     "InstDataMgr.Instr",
     (vertical: (), horizontal: mid),
-    id: "wInstDataMgr-Bus"
+    id: "wInstDataMgr-Bus",
     name: ("Instr", none),
     bus: true
   )
@@ -144,7 +143,7 @@
   wire.wire(
     "RegFile.A1",
     (horizontal: mid, vertical: ()),
-    id: "wBus-RegFile-A1"
+    id: "wBus-RegFile-A1",
     name: (none, "RS1"),
     slice: (19, 15),
     reverse: true,
@@ -153,7 +152,7 @@
   wire.wire(
     "RegFile.A3",
     (horizontal: mid, vertical: ()),
-    id: "wBus-RegFile-A3"
+    id: "wBus-RegFile-A3",
     name: (none, "RD"),
     slice: (11, 7),
     reverse: true,
@@ -162,12 +161,12 @@
   wire.wire(
     "Extender.in",
     (horizontal: mid, vertical: ()),
-    id: "wBus-Extender"
+    id: "wBus-Extender",
     slice: (31, 7),
     reverse: true,
     bus: true
   )
-
+  
   element.alu(
     pos: (
       22, (align: "in1", with: "RegFile.RD1")
@@ -179,11 +178,13 @@
   wire.wire(
     "RegFile.RD1",
     "ALU.in1",
-    id: "wRegFile-ALU"
+    id: "wRegFile-ALU",
     name: ("A", "SrcA"),
     bus: true
   )
+  wire.stub("ALU.north", side: "north")
 
+  /*
   element.block(
     pos: (
       26, (align: "in", with: "ALU.out")
