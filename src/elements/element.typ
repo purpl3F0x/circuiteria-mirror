@@ -1,4 +1,4 @@
-#import "@preview/cetz:0.3.2": draw, coordinate, matrix, vector
+#import "/src/cetz.typ": draw, coordinate, matrix, vector
 #import "ports.typ": add-ports, add-port, get-port-pos, get-port-idx
 #import "../util.typ"
 

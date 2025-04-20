@@ -1,5 +1,5 @@
 #import "../src/lib.typ": *
-#import "@preview/cetz:0.3.4": draw
+#import "/src/cetz.typ": draw
 
 #set text(font: "Source Sans 3")
 #set page(width: auto, height: auto, margin: .5cm)

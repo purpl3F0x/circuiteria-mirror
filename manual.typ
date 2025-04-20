@@ -1,5 +1,5 @@
 #import "@preview/tidy:0.4.1"
-#import "@preview/cetz:0.3.2": draw, canvas
+#import "/src/cetz.typ": draw, canvas
 #import "src/lib.typ"
 #import "doc/examples.typ"
 #import "src/circuit.typ": circuit

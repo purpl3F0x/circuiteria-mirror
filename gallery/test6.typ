@@ -1,4 +1,4 @@
-#import "@preview/cetz:0.3.2": draw, vector
+#import "/src/cetz.typ": draw, vector
 #import "../src/lib.typ": *
 
 #set page(width: auto, height: auto, margin: .5cm)

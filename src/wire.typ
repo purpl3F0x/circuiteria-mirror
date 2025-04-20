@@ -1,4 +1,4 @@
-#import "@preview/cetz:0.3.2": draw, coordinate
+#import "/src/cetz.typ": draw, coordinate
 #import "util.typ": opposite-anchor
 #import "elements/ports.typ": get-port-side
 #import "elements/element.typ"

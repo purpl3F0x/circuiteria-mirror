@@ -1,4 +1,4 @@
-#import "@preview/cetz:0.3.2": draw
+#import "/src/cetz.typ": draw
 #import "element.typ"
 #import "ports.typ": add-port
 #import "../util.typ"
