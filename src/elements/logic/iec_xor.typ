@@ -34,11 +34,11 @@
   )
 }
 
-/// Draws an IEC-NXOR gate. This function is also available as `element.iec-gate-nxor()`
+/// Draws an IEC-XNOR gate. This function is also available as `element.iec-gate-xnor()`
 /// 
 /// For parameters, see #doc-ref("gates.iec-gate")
-/// #examples.iec-gate-nxor
-#let iec-gate-nxor(
+/// #examples.iec-gate-xnor
+#let iec-gate-xnor(
   x: none,
   y: none,
   w: none,
