@@ -115,6 +115,46 @@ gates.gate-xnor(x: 0, y: 0, w: 1.5, h: 1.5)
 gates.gate-xnor(x: 3, y: 0, w: 1.5, h: 1.5, inverted: "all")
 ```, vertical: true)
 
+#let iec-gate-and = example(```
+gates.iec-gate-and(x: 0, y: 0, w: 1.5, h: 1.5)
+gates.iec-gate-and(x: 3, y: 0, w: 1.5, h: 1.5, inverted: "all")
+```, vertical: true)
+
+#let iec-gate-nand = example(```
+gates.iec-gate-nand(x: 0, y: 0, w: 1.5, h: 1.5)
+gates.iec-gate-nand(x: 3, y: 0, w: 1.5, h: 1.5, inverted: "all")
+```, vertical: true)
+
+#let iec-gate-or = example(```
+gates.iec-gate-or(x: 0, y: 0, w: 1.5, h: 1.5)
+gates.iec-gate-or(x: 3, y: 0, w: 1.5, h: 1.5, inverted: "all")
+```, vertical: true)
+
+#let iec-gate-nor = example(```
+gates.iec-gate-nor(x: 0, y: 0, w: 1.5, h: 1.5)
+gates.iec-gate-nor(x: 3, y: 0, w: 1.5, h: 1.5, inverted: "all")
+```, vertical: true)
+
+#let iec-gate-xor = example(```
+gates.iec-gate-xor(x: 0, y: 0, w: 1.5, h: 1.5)
+gates.iec-gate-xor(x: 3, y: 0, w: 1.5, h: 1.5, inverted: "all")
+```, vertical: true)
+
+#let iec-gate-xnor = example(```
+gates.iec-gate-xnor(x: 0, y: 0, w: 1.5, h: 1.5)
+gates.iec-gate-xnor(x: 3, y: 0, w: 1.5, h: 1.5, inverted: "all")
+```, vertical: true)
+
+#let iec-gate-buf = example(```
+gates.iec-gate-buf(x: 0, y: 0, w: 1.5, h: 1.5)
+gates.iec-gate-buf(x: 3, y: 0, w: 1.5, h: 1.5, inverted: "all")
+```, vertical: true)
+
+#let iec-gate-not = example(```
+gates.iec-gate-not(x: 0, y: 0, w: 1.5, h: 1.5)
+gates.iec-gate-not(x: 3, y: 0, w: 1.5, h: 1.5, inverted: "all")
+```, vertical: true)
+
 #let group = example(```
 element.group(
   id: "g1", name: "Group 1", stroke: (dash: "dashed"),

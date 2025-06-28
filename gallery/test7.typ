@@ -84,7 +84,7 @@
     wire.stub("iec-xor-port-in" + str(i), "west")
   }
 
-  element.iec-gate-nxor(
+  element.iec-gate-xnor(
     id: "iec-nxor",
     x: 3,
     y: -9,
