@@ -94,18 +94,15 @@
   let space = 100% / inputs
   for i in range(inputs) {
     let pct = (i + 0.5) * space
-    let a = (tl, pct, bl)
-    let b = (tr, pct, br)
-    let int-name = id + "i" + str(i)
-    draw.intersections(
-      int-name,
-      func,
-      draw.hide(draw.line(a, b))
-    )
+    let port-pos = (tl, pct, bl)
     let port-name = "in" + str(i)
-    let port-pos = int-name + ".0"
     if inverted == "all" or port-name in inverted {
-      draw.circle(port-pos, radius: inverted-radius, anchor: "east", stroke: stroke)
+      draw.circle(
+        port-pos,
+        radius: inverted-radius,
+        anchor: "east",
+        stroke: stroke
+      )
       port-pos = (rel: (-2 * inverted-radius, 0), to: port-pos)
     }
     add-port(
