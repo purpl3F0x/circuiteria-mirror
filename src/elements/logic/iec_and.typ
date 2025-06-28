@@ -6,8 +6,8 @@
 /// Draws an IEC-AND gate. This function is also available as `element.iec-gate-and()`
 /// 
 /// For parameters, see #doc-ref("gates.iec-gate")
-/// #examples.gate-iec-and
-#let gate-iec-and(
+/// #examples.iec-gate-and
+#let iec-gate-and(
   x: none,
   y: none,
   w: none,
@@ -40,8 +40,8 @@
 /// Draws an IEC-NAND gate. This function is also available as `element.iec-gate-nand()`
 /// 
 /// For parameters, see #doc-ref("gates.iec-gate")
-/// #examples.gate-iec-nand
-#let gate-iec-nand(
+/// #examples.iec-gate-nand
+#let iec-gate-nand(
   x: none,
   y: none,
   w: none,
@@ -55,7 +55,7 @@
     ports: false
   ),
 ) = {
-  gate-iec-and(
+  iec-gate-and(
     x: x,
     y: y,
     w: w,

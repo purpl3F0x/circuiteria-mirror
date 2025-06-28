@@ -4,8 +4,8 @@
 /// Draws an IEC-OR gate. This function is also available as `element.iec-gate-or()`
 /// 
 /// For parameters, see #doc-ref("gates.iec-gate")
-/// #examples.gate-iec-or
-#let gate-iec-or(
+/// #examples.iec-gate-or
+#let iec-gate-or(
   x: none,
   y: none,
   w: none,
@@ -37,8 +37,8 @@
 /// Draws an IEC-NOR gate. This function is also available as `element.iec-gate-nor()`
 /// 
 /// For parameters, see #doc-ref("gates.iec-gate")
-/// #examples.gate-iec-nor
-#let gate-iec-nor(
+/// #examples.iec-gate-nor
+#let iec-gate-nor(
   x: none,
   y: none,
   w: none,
@@ -52,7 +52,7 @@
     ports: false
   )
 ) = {
-  gate-iec-or(
+  iec-gate-or(
     x: x,
     y: y,
     w: w,

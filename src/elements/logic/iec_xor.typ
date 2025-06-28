@@ -4,8 +4,8 @@
 /// Draws an IEC-XOR gate. This function is also available as `element.iec-gate-xor()`
 /// 
 /// For parameters, see #doc-ref("gates.iec-gate")
-/// #examples.gate-iec-xor
-#let gate-iec-xor(
+/// #examples.iec-gate-xor
+#let iec-gate-xor(
   x: none,
   y: none,
   w: none,
@@ -37,8 +37,8 @@
 /// Draws an IEC-NXOR gate. This function is also available as `element.iec-gate-nxor()`
 /// 
 /// For parameters, see #doc-ref("gates.iec-gate")
-/// #examples.gate-iec-nxor
-#let gate-iec-nxor(
+/// #examples.iec-gate-nxor
+#let iec-gate-nxor(
   x: none,
   y: none,
   w: none,
@@ -52,7 +52,7 @@
     ports: false
   )
 ) = {
-  gate-iec-xor(
+  iec-gate-xor(
     x: x,
     y: y,
     w: w,

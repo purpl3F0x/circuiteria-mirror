@@ -12,9 +12,9 @@
 #import "elements/logic/xor.typ": gate-xor, gate-xnor
 #import "elements/logic/buf.typ": gate-buf, gate-not
 #import "elements/logic/iec_gate.typ": iec-gate
-#import "elements/logic/iec_and.typ": gate-iec-and, gate-iec-nand
-#import "elements/logic/iec_buf.typ": gate-iec-buf, gate-iec-not
-#import "elements/logic/iec_or.typ": gate-iec-or, gate-iec-nor
-#import "elements/logic/iec_xor.typ": gate-iec-xor, gate-iec-nxor
+#import "elements/logic/iec_and.typ": iec-gate-and, iec-gate-nand
+#import "elements/logic/iec_buf.typ": iec-gate-buf, iec-gate-not
+#import "elements/logic/iec_or.typ": iec-gate-or, iec-gate-nor
+#import "elements/logic/iec_xor.typ": iec-gate-xor, iec-gate-nxor
 
 #import "elements/group.typ": group

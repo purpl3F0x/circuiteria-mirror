@@ -5,8 +5,8 @@
 /// Draws an IEC buffer gate. This function is also available as `element.iec-gate-buf()`
 ///
 /// For parameters, see #doc-ref("gates.iec-gate")
-/// #examples.gate-iec-buf
-#let gate-iec-buf(
+/// #examples.iec-gate-buf
+#let iec-gate-buf(
   x: none,
   y: none,
   w: none,
@@ -38,8 +38,8 @@
 /// Draws an IEC NOT gate. This function is also available as `element.iec-gate-not()`
 /// 
 /// For parameters, see #doc-ref("gates.iec-gate")
-/// #examples.gate-iec-not
-#let gate-iec-not(
+/// #examples.iec-gate-not
+#let iec-gate-not(
   x: none,
   y: none,
   w: none,
@@ -53,7 +53,7 @@
     ports: false,
   ),
 ) = {
-  gate-iec-buf(
+  iec-gate-buf(
     x: x,
     y: y,
     w: w,
