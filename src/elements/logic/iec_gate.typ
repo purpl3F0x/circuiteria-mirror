@@ -3,39 +3,19 @@
 #import "../element.typ"
 
 #let default-draw-shape(id, tl, tr, br, bl, fill, stroke, symbol) = {
-  let (x, y) = bl
-  let (width, height) = (tr.at(0) - x, tr.at(1) - y)
-
-  let t = (x + width / 2, y + height)
-  let b = (x + width / 2, y)
-
-  let f = draw.group(
+  let shapes = draw.rect(
+    inset: 0.5em,
+    fill: fill,
+    stroke: stroke,
     name: id,
-    {
-      draw.merge-path(
-        inset: 0.5em,
-        fill: fill,
-        stroke: stroke,
-        name: id + "-path",
-        close: true,
-        {
-          draw.line(bl, tl, tr, br)
-        },
-      )
-
-      draw.content(
-        (x + width / 2, y + height / 2),
-        padding: 0.5em,
-        align(center)[*$ symbol $*],
-      )
-
-      draw.anchor("north", t) 
-      draw.anchor("south", b)
-    },
+    bl, tr
   )
-  return (f, tl, tr, br, bl)
+  shapes += draw.content(
+    id + ".center",
+    [*$ symbol $*]
+  )
+  return (shapes, tl, tr, br, bl)
 }
-
 
 /// Draws a logic gate. This function is also available as `element.iec-gate()`
 ///
