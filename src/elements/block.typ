@@ -1,7 +1,7 @@
 #import "@preview/cetz:0.3.2": draw
 #import "element.typ"
 
-#let draw-shape(id, tl, tr, br, bl, fill, stroke, radius) = {
+#let draw-shape(id, tl, tr, br, bl, fill, stroke, radius: 0.5em) = {
   let f = draw.rect(
     radius: radius,
     inset: 0.5em,
