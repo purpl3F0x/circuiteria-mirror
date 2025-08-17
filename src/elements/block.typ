@@ -1,9 +1,9 @@
 #import "@preview/cetz:0.3.2": draw
 #import "element.typ"
 
-#let draw-shape(id, tl, tr, br, bl, fill, stroke) = {
+#let draw-shape(id, tl, tr, br, bl, fill, stroke, radius) = {
   let f = draw.rect(
-    radius: 0.5em,
+    radius: radius,
     inset: 0.5em,
     fill: fill,
     stroke: stroke,
@@ -27,13 +27,14 @@
   ports: (),
   ports-margins: (),
   fill: none,
+  radius: 0.5em,
   stroke: black + 1pt,
   id: "",
   debug: (
     ports: false
   )
 ) = element.elmt(
-  draw-shape: draw-shape,
+  draw-shape: draw-shape.with(radius: radius),
   x: x,
   y: y,
   w: w,
