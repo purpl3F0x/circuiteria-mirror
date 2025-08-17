@@ -9,6 +9,5 @@
 /// - length (length, ratio): Optional base unit
 /// -> none
 #let circuit(body, length: 2em) = {
-  set text(font: "Source Sans 3")
   canvas(length: length, body)
 }
