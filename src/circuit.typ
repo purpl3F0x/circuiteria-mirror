@@ -8,7 +8,6 @@
 /// - body (none, array, element): A code block in which draw functions have been called
 /// - length (length, ratio): Optional base unit
 /// -> none
-#let circuit(body, length: 2em, font: "Source Sans 3") = {
-  set text(font: font)
+#let circuit(body, length: 2em) = {
   canvas(length: length, body)
 }
