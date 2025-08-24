@@ -3,7 +3,7 @@
 
 /// List of valid wire styles
 /// #examples.wires
-#let wire-styles = ("direct", "zigzag", "dodge")
+#let wire-styles = ("direct", "zigzag", "dodge", "guided")
 #let signal-width = 1pt
 #let bus-width = 1.5pt
 
@@ -109,6 +109,88 @@
   return (points, anchors)
 }
 
+#let get-guided-wire(pts, margins, sides, center-guides, ctx) = {
+  let start = pts.first()
+  let end = pts.last()
+  let (margin-start, margin-end) = margins
+  let (side-start, side-end) = sides
+  let (center_horizontal, center_vertical) = center-guides
+
+  let (ctx, p0) = coordinate.resolve(ctx, start)
+  let (ctx, p6) = coordinate.resolve(ctx, end)
+  p0 = (x: p0.first(), y: p0.at(1))
+  p6 = (x: p6.first(), y: p6.at(1))
+
+  let box_width = calc.abs(p6.x - p0.x)
+  let box_height = calc.abs(p6.y - p0.y)
+
+  // finding correct dx and dy
+  let dx1 = box_width * margin-start / 100%
+  if side-start == "west" {
+    dx1 *= -1
+  } else if side-start == "north" or side-start == "south" { dx1 = 0}
+
+  let dx2 = box_width * margin-end / 100%
+  if side-end == "west" {
+    dx2 *= -1
+  } else if side-end == "north" or side-end == "south" { dx2 = 0}
+
+  let dy1 = box_height * margin-start / 100%
+  if side-start == "south" {
+    dy1 *= -1
+  } else if side-start == "west" or side-start == "east" { dy1 = 0}
+
+  let dy2 = box_height * margin-end / 100%
+  if side-end == "south" {
+    dy2 *= -1
+  } else if side-end == "west" or side-end == "east" { dy2 = 0}
+
+
+  // points that are closest to the edge points
+  let p1 = (p0.x + dx1, p0.y + dy1)
+  let p5 = (p6.x + dx2, p6.y + dy2)
+
+
+  // middle point
+  let center_x = p0.x + box_width * center_horizontal / 100%
+  let center_y = p0.y + box_height * center_vertical / 100%
+  let p3 = (center_x, center_y)
+
+  // setting up the points for that touch the guides
+  let p2 = (0,0)
+  let p4 = (0,0)
+  if side-start in ("north", "south") {
+    p2 = (horizontal: p3, vertical: p1)
+  } else {
+    p2 = (horizontal: p1, vertical: p3)
+  }
+  if side-end in ("north", "south") {
+    p4 = (horizontal: p3, vertical: p5)
+  } else if side-end in ("east", "west") {
+    p4 = (horizontal: p5, vertical: p3)
+  }
+
+  // returning
+  let points = (
+    start,
+    p1,
+    p2,
+    p3,
+    p4,
+    p5,
+    end
+  )
+  let anchors = (
+    "start": start,
+    "start2": points.at(1),
+    "guide-start": points.at(2),
+    "center": points.at(3),
+    "guide-end": points.at(4),
+    "end2": points.at(5),
+    "end": end
+  )
+  return (points, anchors)
+}
 /// Draws a wire between two points
 /// - id (str): The wire's id, for future reference (anchors)
 /// - pts (array): The two points (as CeTZ compatible coordinates, i.e. XY, relative positions, ids, etc.)
@@ -127,6 +209,9 @@
 /// - dodge-y (number): Y position to dodge the wire to (only with style "dodge")
 /// - dodge-sides (array): The start and end sides (going out of the connected element) of the wire (only with style "dodge")
 /// - dodge-margins (array): The start and end margins (i.e. space before dodging) of the wire (only with style "dodge")
+/// - guided-center (array): the horizontal and vertical guides of the center guides (only with style "guided")
+/// - guided-margins (array): the start and end of guided margins of the wire (only with style "guided")
+/// - guided-sides (array): the side of start and end array (must be either "north", "south", "west", "east") (only work with style "guided")
 #let wire(
   id, pts,
   bus: false,
@@ -137,6 +222,9 @@
   dashed: false,
   style: "direct",
   reverse: false,
+  guided-center: (50%, 50%),
+  guided-margins: (5%, 5%),
+  guided-sides: ("east", "west"),
   directed: false,
   rotate-name: true,
   zigzag-ratio: 50%,
@@ -176,6 +264,14 @@
       dodge-y,
       dodge-margins,
       dodge-sides,
+      ctx
+    )
+  } else if style == "guided" {
+    (points, anchors) = get-guided-wire(
+      pts,
+      guided-margins,
+      guided-sides,
+      guided-center,
       ctx
     )
   }

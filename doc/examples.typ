@@ -56,7 +56,7 @@ for i in range(3) {
 ```)
 
 #let wires = example(```
-for i in range(3) {
+for i in range(4) {
   draw.circle((i * 3, 0), radius: .1, name: "p" + str(i * 2))
   draw.circle((i * 3 + 2, 1), radius: .1, name: "p" + str(i * 2 + 1))
   draw.content((i * 3 + 1, -1), raw(wire.wire-styles.at(i)))
@@ -65,6 +65,10 @@ wire.wire("w1", ("p0", "p1"), style: "direct")
 wire.wire("w2", ("p2", "p3"), style: "zigzag")
 wire.wire("w3", ("p4", "p5"), style: "dodge",
           dodge-y: -0.5, dodge-margins: (0.5, 0.5))
+wire.wire("w4", ("p6","p7"), style: "guided",
+          guided-center:(20%, 40%), guided-margins: (90%,87%),
+          guided-sides: ("north","south"))
+
 ```, vertical: true)
 
 #let stub = example(```
