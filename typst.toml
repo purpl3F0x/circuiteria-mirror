@@ -1,6 +1,6 @@
 [package]
 name = "circuiteria"
-version = "0.2.0"
+version = "0.2.1"
 compiler = "0.13.1"
 repository = "https://git.kb28.ch/HEL/circuiteria"
 entrypoint = "src/lib.typ"

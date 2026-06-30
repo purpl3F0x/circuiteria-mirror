@@ -105,7 +105,7 @@ This package provides a way to make beautiful block circuit diagrams using the C
 
 Simply import Circuiteria and call the `circuit` function:
 #pad(left: 1em)[```typ
-#import "@preview/circuiteria:0.2.0"
+#import "@preview/circuiteria:0.2.1"
 #circuiteria.circuit({
   import circuiteria: *
   ...
