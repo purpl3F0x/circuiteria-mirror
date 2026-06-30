@@ -1,4 +1,4 @@
-#import "@preview/cetz:0.3.2": draw
+#import "/src/cetz.typ": draw
 #import "iec_gate.typ" as iec-gate
 
 /// Draws an IEC-XOR gate. This function is also available as `element.iec-gate-xor()`
