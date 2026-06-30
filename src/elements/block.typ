@@ -16,7 +16,8 @@
 /// Draws a block element
 ///
 /// #examples.block
-/// For parameters description, see #doc-ref("element.elmt")
+/// For other parameters description, see #doc-ref("element.elmt")
+/// - radius (number, length, ratio, dictionary): The corner radius of the block. See CeTZ documentation for more information
 #let block(
   x: none,
   y: none,
