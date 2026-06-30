@@ -1,4 +1,4 @@
-#import "@preview/cetz:0.3.2": draw
+#import "/src/cetz.typ": draw
 #import "gate.typ"
 
 #let draw-shape(id, tl, tr, br, bl, fill, stroke) = {
