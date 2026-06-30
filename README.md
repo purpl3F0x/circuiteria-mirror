@@ -3,7 +3,7 @@
 Circuiteria is a [Typst](https://typst.app) package for drawing block circuit diagrams using the [CeTZ](https://typst.app/universe/package/cetz) package.
 
 <p align="center">
-  <img src="./gallery/platypus.png" alt="Perry the platypus">
+  <img src="./gallery/platypus.png" alt="Perry the platypus" alt="A platypus / Perry the Platypus meme made with colored rounded rectangles">
 </p>
 
 ## Examples
@@ -11,17 +11,17 @@ Circuiteria is a [Typst](https://typst.app) package for drawing block circuit di
   <tr>
     <td colspan="2">
       <a href="./gallery/test.typ">
-        <img src="./gallery/test.png" width="500px">
+        <img src="./gallery/test.png" width="500px" alt="Block diagram of a multi-cycle RISC-V FPGA processor">
       </a>
     </td>
   </tr>
   <tr>
-    <td colspan="2">A bit of eveything</td>
+    <td colspan="2">A bit of everything</td>
   </tr>
   <tr>
     <td colspan="2">
       <a href="./gallery/test5.typ">
-        <img src="./gallery/test5.png" width="500px">
+        <img src="./gallery/test5.png" width="500px" alt="Block diagram of a single-cycle RISC-V processor">
       </a>
     </td>
   </tr>
@@ -31,12 +31,12 @@ Circuiteria is a [Typst](https://typst.app) package for drawing block circuit di
   <tr>
     <td>
       <a href="./gallery/test4.typ">
-        <img src="./gallery/test4.png" width="250px">
+        <img src="./gallery/test4.png" width="250px" alt="Top-level block diagram of a single-cycle RISC-V processor">
       </a>
     </td>
     <td>
       <a href="./gallery/test6.typ">
-        <img src="./gallery/test6.png" width="250px">
+        <img src="./gallery/test6.png" width="250px" alt="Block diagram of a simple single-cycle RISC-V ALU">
       </a>
     </td>
   </tr>
