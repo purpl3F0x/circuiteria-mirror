@@ -1,4 +1,5 @@
 #let version = version(0, 2, 0)
+#let name = "circuiteria"
 
 #import "circuit.typ": circuit
 #import "element.typ"
