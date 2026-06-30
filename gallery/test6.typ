@@ -1,5 +1,5 @@
 #import "/src/cetz.typ": draw
-#import "../src/lib.typ": *
+#import "@preview/circuiteria:0.2.1": *
 
 #set page(width: auto, height: auto, margin: .5cm)
 
