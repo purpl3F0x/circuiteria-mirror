@@ -1,4 +1,4 @@
-#import "@preview/cetz:0.3.2": canvas
+#import "/src/cetz.typ": canvas
 #import "@preview/tidy:0.3.0"
 
 /// Draws a block circuit diagram
@@ -9,6 +9,5 @@
 /// - length (length, ratio): Optional base unit
 /// -> none
 #let circuit(body, length: 2em) = {
-  set text(font: "Source Sans 3")
   canvas(length: length, body)
 }

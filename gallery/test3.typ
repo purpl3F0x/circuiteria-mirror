@@ -1,5 +1,4 @@
-#import "@preview/cetz:0.3.2": draw
-#import "../src/lib.typ": circuit, element, util, wire
+#import "@preview/circuiteria:0.2.1": circuit, element, util, wire
 
 #set page(width: auto, height: auto, margin: .5cm)
 

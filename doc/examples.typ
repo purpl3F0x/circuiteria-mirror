@@ -56,7 +56,7 @@ for i in range(3) {
 ```)
 
 #let wires = example(```
-for i in range(3) {
+for i in range(4) {
   draw.circle((i * 3, 0), radius: .1, name: "p" + str(i * 2))
   draw.circle((i * 3 + 2, 1), radius: .1, name: "p" + str(i * 2 + 1))
   draw.content((i * 3 + 1, -1), raw(wire.wire-styles.at(i)))
@@ -65,6 +65,10 @@ wire.wire("w1", ("p0", "p1"), style: "direct")
 wire.wire("w2", ("p2", "p3"), style: "zigzag")
 wire.wire("w3", ("p4", "p5"), style: "dodge",
           dodge-y: -0.5, dodge-margins: (0.5, 0.5))
+wire.wire("w4", ("p6","p7"), style: "guided",
+          guided-center:(20%, 40%), guided-margins: (90%,87%),
+          guided-sides: ("north","south"))
+
 ```, vertical: true)
 
 #let stub = example(```
@@ -113,6 +117,46 @@ gates.gate-xor(x: 3, y: 0, w: 1.5, h: 1.5, inverted: "all")
 #let gate-xnor = example(```
 gates.gate-xnor(x: 0, y: 0, w: 1.5, h: 1.5)
 gates.gate-xnor(x: 3, y: 0, w: 1.5, h: 1.5, inverted: "all")
+```, vertical: true)
+
+#let iec-gate-and = example(```
+gates.iec-gate-and(x: 0, y: 0, w: 1.5, h: 1.5)
+gates.iec-gate-and(x: 3, y: 0, w: 1.5, h: 1.5, inverted: "all")
+```, vertical: true)
+
+#let iec-gate-nand = example(```
+gates.iec-gate-nand(x: 0, y: 0, w: 1.5, h: 1.5)
+gates.iec-gate-nand(x: 3, y: 0, w: 1.5, h: 1.5, inverted: "all")
+```, vertical: true)
+
+#let iec-gate-or = example(```
+gates.iec-gate-or(x: 0, y: 0, w: 1.5, h: 1.5)
+gates.iec-gate-or(x: 3, y: 0, w: 1.5, h: 1.5, inverted: "all")
+```, vertical: true)
+
+#let iec-gate-nor = example(```
+gates.iec-gate-nor(x: 0, y: 0, w: 1.5, h: 1.5)
+gates.iec-gate-nor(x: 3, y: 0, w: 1.5, h: 1.5, inverted: "all")
+```, vertical: true)
+
+#let iec-gate-xor = example(```
+gates.iec-gate-xor(x: 0, y: 0, w: 1.5, h: 1.5)
+gates.iec-gate-xor(x: 3, y: 0, w: 1.5, h: 1.5, inverted: "all")
+```, vertical: true)
+
+#let iec-gate-xnor = example(```
+gates.iec-gate-xnor(x: 0, y: 0, w: 1.5, h: 1.5)
+gates.iec-gate-xnor(x: 3, y: 0, w: 1.5, h: 1.5, inverted: "all")
+```, vertical: true)
+
+#let iec-gate-buf = example(```
+gates.iec-gate-buf(x: 0, y: 0, w: 1.5, h: 1.5)
+gates.iec-gate-buf(x: 3, y: 0, w: 1.5, h: 1.5, inverted: "all")
+```, vertical: true)
+
+#let iec-gate-not = example(```
+gates.iec-gate-not(x: 0, y: 0, w: 1.5, h: 1.5)
+gates.iec-gate-not(x: 3, y: 0, w: 1.5, h: 1.5, inverted: "all")
 ```, vertical: true)
 
 #let group = example(```

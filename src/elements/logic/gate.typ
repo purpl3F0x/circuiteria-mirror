@@ -1,4 +1,4 @@
-#import "@preview/cetz:0.3.2": draw, coordinate
+#import "/src/cetz.typ": draw, coordinate
 #import "../ports.typ": add-ports, add-port
 #import "../element.typ"
 
@@ -63,6 +63,12 @@
     if to == "out" {
       dy = height / 2
     } else {
+      let all-ports = range(inputs).map(i => "in" + str(i))
+      let i = all-ports.position(p => p == to)
+      assert(
+        i != none,
+        message: "Unknown port '" + y.to + "' must be one of " + repr(all-ports)
+      )
       dy = height * (i + 0.5) / inputs
     }
     

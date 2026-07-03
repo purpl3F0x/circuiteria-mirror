@@ -1,5 +1,5 @@
 #import "@preview/tidy:0.4.1"
-#import "@preview/cetz:0.3.2": draw, canvas
+#import "/src/cetz.typ": draw, canvas
 #import "src/lib.typ"
 #import "doc/examples.typ"
 #import "src/circuit.typ": circuit
@@ -105,7 +105,7 @@ This package provides a way to make beautiful block circuit diagrams using the C
 
 Simply import Circuiteria and call the `circuit` function:
 #pad(left: 1em)[```typ
-#import "@preview/circuiteria:0.2.0"
+#import "@preview/circuiteria:0.2.1"
 #circuiteria.circuit({
   import circuiteria: *
   ...
@@ -195,7 +195,12 @@ If you have installed Circuiteria directly in your project, import #link("src/li
   read("src/elements/logic/and.typ") + "\n" +
   read("src/elements/logic/buf.typ") + "\n" +
   read("src/elements/logic/or.typ") + "\n" +
-  read("src/elements/logic/xor.typ"),
+  read("src/elements/logic/xor.typ") + "\n" +
+  read("src/elements/logic/iec_gate.typ") + "\n" +
+  read("src/elements/logic/iec_and.typ") + "\n" +
+  read("src/elements/logic/iec_buf.typ") + "\n" +
+  read("src/elements/logic/iec_or.typ") + "\n" +
+  read("src/elements/logic/iec_xor.typ"),
   name: "gates",
   old-syntax: true,
   scope: (
