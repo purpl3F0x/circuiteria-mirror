@@ -3,7 +3,7 @@
 Circuiteria is a [Typst](https://typst.app) package for drawing block circuit diagrams using the [CeTZ](https://typst.app/universe/package/cetz) package.
 
 <p align="center">
-  <img src="./gallery/platypus.png" alt="Perry the platypus" alt="A platypus / Perry the Platypus meme made with colored rounded rectangles">
+  <img src="./gallery/platypus.png" alt="A platypus / Perry the Platypus meme made with colored rounded rectangles">
 </p>
 
 ## Examples
