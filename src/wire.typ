@@ -363,7 +363,8 @@
 /// - vertical (bool): Whether the name should be displayed vertically
 /// - length (number): The length of the stub
 /// - name-offset (number): The name offset, perpendicular to the stub
-#let stub(port-id, side, name: none, vertical: false, length: 1em, name-offset: 0) = {
+/// - bus (bool): Whether the stub is a bus (thicker line)
+#let stub(port-id, side, name: none, vertical: false, length: 1em, name-offset: 0, bus: false) = {
   let end-offset = (
     north: (0, length),
     east: (length, 0),
@@ -380,7 +381,8 @@
 
   draw.line(
     port-id,
-    (rel: end-offset, to: port-id)
+    (rel: end-offset, to: port-id),
+    stroke: if bus { bus-width } else { signal-width }
   )
   if name != none {
     let text-anchor = if vertical {

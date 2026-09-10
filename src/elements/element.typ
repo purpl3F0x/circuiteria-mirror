@@ -33,6 +33,7 @@
 ///   - `id` (`str`): (Required) Port id
 ///   - `name` (`str`): Optional name displayed *in* the block
 ///   - `clock` (`bool`): Whether it is a clock port (triangle symbol)
+///   - `invert` (`bool`): Whether it is an active-low port (bubble symbol)
 ///   - `vertical` (`bool`): Whether the name should be drawn vertically
 /// - ports-margins (dictionary): Dictionary of ports margins (used with automatic port placement). They keys are cardinal directions ("north", "east", "south", "west"). The values are tuples of (`<start>`, `<end>`) margins (numbers)
 /// - fill (none, color): Fill color

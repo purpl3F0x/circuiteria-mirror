@@ -216,3 +216,22 @@ If you have installed Circuiteria directly in your project, import #link("src/li
 )
 
 #tidy.show-module(gates-docs, sort-functions: false)
+
+#pagebreak()
+
+#let verilog-docs = tidy.parse-module(
+  read("src/verilog.typ"),
+  name: "verilog",
+  old-syntax: true,
+  scope: (
+    element: element,
+    circuit: circuit,
+    draw: draw,
+    wire: wire,
+    tidy: tidy,
+    examples: examples,
+    doc-ref: doc-ref
+  )
+)
+
+#tidy.show-module(verilog-docs, sort-functions: false)

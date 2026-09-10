@@ -27,6 +27,21 @@
     // TODO: use context or vectors to have the height relative to the width
     draw.line(prev, pos1, next)
   }
+  if (port.at("invert", default: false)) {
+    let r = 0.1
+    let offset
+    if      (side == "north") { offset = (   0,   r) }
+    else if (side == "east")  { offset = (   r,   0) }
+    else if (side == "south") { offset = (   0,  -r) }
+    else if (side == "west")  { offset = (  -r,   0) }
+
+    draw.circle(
+      (rel: offset, to: pos),
+      radius: r,
+      fill: white,
+      stroke: black + 1pt
+    )
+  }
   draw.content(
     pos,
     anchor: if name-rotate {rotate-anchor(side)} else {side},

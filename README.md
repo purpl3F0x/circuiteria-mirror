@@ -44,6 +44,16 @@ Circuiteria is a [Typst](https://typst.app) package for drawing block circuit di
     <td>Groups</td>
     <td>Rotated</td>
   </tr>
+  <tr>
+    <td colspan="2">
+      <a href="./gallery/verilog.typ">
+        <img src="./gallery/verilog.png" width="500px" alt="Block automatically generated from a Verilog module">
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2">Generated from a Verilog module</td>
+  </tr>
 </table>
 
 > **Note**\
@@ -62,3 +72,16 @@ To use this package, simply import [circuiteria](https://typst.app/universe/pack
   ...
 })
 ```
+
+### Verilog modules
+Blocks can be generated automatically from Verilog/SystemVerilog sources.
+AXI4, AXI4-Lite and AXI4-Stream signals are grouped into single bus ports, and
+clock/reset signals are detected and placed together:
+```typ
+#circuiteria.circuit({
+  import circuiteria: *
+  verilog.block(read("my_module.v"), x: 0, y: 0)
+})
+```
+The port ids are the signal names, or the bus prefixes for inferred buses
+(e.g. `"my_module-port-s_axi"`).

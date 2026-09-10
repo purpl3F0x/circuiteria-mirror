@@ -5,4 +5,5 @@
 #import "element.typ"
 #import "gates.typ"
 #import "util.typ"
+#import "verilog.typ"
 #import "wire.typ"
