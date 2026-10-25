@@ -43,6 +43,21 @@ module axi_demo #(
     input  wire                      m_axis_tready,
     output wire                      m_axis_tlast,
 
+    // Vivado BRAM controller interface
+     (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 tile_ram CLK",
+         X_INTERFACE_PARAMETER = "MASTER_TYPE BRAM_CTRL, MEM_ECC NONE, MEM_WIDTH 128,
+         MEM_SIZE 65536, READ_WRITE_MODE READ_ONLY, READ_LATENCY 3" *)
+     output wire                      tile_ram_clk,
+     (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 tile_ram RST",
+         X_INTERFACE_PARAMETER = "POLARITY ACTIVE_HIGH" *)
+     output wire                      tile_ram_rst,
+     (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 tile_ram EN" *)
+     output wire                      tile_ram_en,
+     (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 tile_ram ADDR" *)
+     output wire [15:0]               tile_ram_addr,
+     (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 tile_ram DOUT" *)
+     input  wire [127:0]              tile_ram_dout,
+
     input  wire                      enable,
     output wire [3:0]                status,
     output wire                      irq

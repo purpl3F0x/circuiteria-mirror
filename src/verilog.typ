@@ -40,19 +40,33 @@
 #let _split-commas(text) = {
   let items = ()
   let depth = 0
+  let attr-depth = 0
+  let in-string = false
   let cur = ()
-  for c in text.clusters() {
-    if c in ("(", "[", "{") {
+  let chars = text.clusters()
+  let i = 0
+  while i < chars.len() {
+    let c = chars.at(i)
+    let next = if i + 1 < chars.len() { chars.at(i + 1) } else { none }
+    if c == "\"" {
+      in-string = not in-string
+    }
+    if not in-string and c == "(" and next == "*" {
+      attr-depth += 1
+    } else if not in-string and c == "*" and next == ")" and attr-depth > 0 {
+      attr-depth -= 1
+    } else if not in-string and attr-depth == 0 and c in ("(", "[", "{") {
       depth += 1
-    } else if c in (")", "]", "}") {
+    } else if not in-string and attr-depth == 0 and c in (")", "]", "}") {
       depth -= 1
     }
-    if c == "," and depth <= 0 {
+    if c == "," and depth <= 0 and attr-depth == 0 and not in-string {
       items.push(cur.join())
       cur = ()
     } else {
       cur.push(c)
     }
+    i += 1
   }
   if cur.join().trim() != "" { items.push(cur.join()) }
   return items.filter(it => it.trim() != "")
@@ -92,13 +106,42 @@
   return calc.abs(hi - lo) + 1
 }
 
-#let _make-port(name, dir, dims) = {
+#let _parse-attributes(text) = {
+  let attrs = (:)
+  for m in text.matches(regex("(?s)\\(\\*\\s*(.*?)\\s*\\*\\)")) {
+    let body = m.captures.at(0)
+    let info = body.match(regex("X_INTERFACE_INFO\\s*=\\s*\"([^\"]+)\""))
+    if info != none {
+      let value = info.captures.at(0)
+      attrs.insert("x-interface-info", value)
+      let parsed = value.match(regex("(?i)^[^\\s:]+:interface:([^:\\s]+):([^\\s]+)\\s+(\\S+)\\s+(\\S+)"))
+      if parsed != none {
+        attrs.insert("interface", (
+          kind: lower(parsed.captures.at(0)),
+          version: parsed.captures.at(1),
+          name: parsed.captures.at(2),
+          signal: lower(parsed.captures.at(3))
+        ))
+      }
+    }
+    let params = body.match(regex("X_INTERFACE_PARAMETER\\s*=\\s*\"([^\"]+)\""))
+    if params != none {
+      attrs.insert("x-interface-parameter", params.captures.at(0))
+    }
+  }
+  return attrs
+}
+
+#let _strip-attributes(text) = text.replace(regex("(?s)\\(\\*.*?\\*\\)"), " ")
+
+#let _make-port(name, dir, dims, attrs: (:)) = {
   let range = _first-range(dims)
   return (
     name: name,
     dir: dir,
     range: range,
-    width: _range-width(range)
+    width: _range-width(range),
+    attrs: attrs
   )
 }
 
@@ -111,7 +154,9 @@
   let last-dir = "input"
   let last-dims = none
   for item in _split-commas(portlist) {
-    let m = item.match(regex(
+    let attrs = _parse-attributes(item)
+    let clean = _strip-attributes(item)
+    let m = clean.match(regex(
       "^\\s*(?:(input|output|inout)\\s+)?(?:" + _net-kw + "\\s+)*" +
       "((?:\\[[^\\]]*\\]\\s*)*)(" + _ident + ")"
     ))
@@ -123,7 +168,7 @@
     } else if dims == none or dims.trim() == "" {
       dims = last-dims
     }
-    ports.push(_make-port(name, last-dir, dims))
+    ports.push(_make-port(name, last-dir, dims, attrs: attrs))
   }
   return ports
 }
@@ -131,15 +176,16 @@
 #let _parse-body-ports(portlist, body) = {
   let decls = (:)
   for m in body.matches(regex(
-    "(?s)\\b(input|output|inout)\\b((?:\\s+" + _net-kw + ")*)\\s*" +
+    "(?s)((?:\\(\\*.*?\\*\\)\\s*)*)\\b(input|output|inout)\\b((?:\\s+" + _net-kw + ")*)\\s*" +
     "((?:\\[[^\\]]*\\]\\s*)*)([^;]*);"
   )) {
-    let dir = m.captures.at(0)
-    let dims = m.captures.at(2)
-    for n in _split-commas(m.captures.at(3)) {
+    let attrs = _parse-attributes(m.captures.at(0))
+    let dir = m.captures.at(1)
+    let dims = m.captures.at(3)
+    for n in _split-commas(m.captures.at(4)) {
       let nm = n.match(regex("^\\s*(" + _ident + ")\\s*$"))
       if nm == none { continue }
-      decls.insert(nm.captures.at(0), _make-port(nm.captures.at(0), dir, dims))
+      decls.insert(nm.captures.at(0), _make-port(nm.captures.at(0), dir, dims, attrs: attrs))
     }
   }
 
@@ -263,6 +309,10 @@
   "rid", "rdata", "rresp", "rlast", "ruser", "rvalid", "rready"
 )
 
+#let bram-suffixes = (
+  "clk", "rst", "en", "we", "wen", "regce", "addr", "din", "dout"
+)
+
 // Signals that only exist on full AXI4 (used to tell AXI4 from AXI4-Lite)
 #let axi-full-only = (
   "awid", "awlen", "awsize", "awburst", "awlock", "awcache", "awqos",
@@ -277,6 +327,14 @@
 #let _is-clock(name) = name.match(_clock-re) != none
 #let _is-reset(name) = name.match(_reset-re) != none
 #let _is-active-low(name) = name.match(regex("(?i)(_n|_b|_l|resetn|rstn)$")) != none
+
+#let _reset-active-low(port) = {
+  let attrs = port.at("attrs", default: (:))
+  let params = attrs.at("x-interface-parameter", default: "")
+  if params.match(regex("(?i)POLARITY\\s+ACTIVE_LOW")) != none { return true }
+  if params.match(regex("(?i)POLARITY\\s+ACTIVE_HIGH")) != none { return false }
+  return _is-active-low(port.name)
+}
 
 // Splits a signal name into (prefix, suffix) using the given suffix table
 #let _match-suffix(name, suffixes) = {
@@ -302,12 +360,25 @@
   let rest = ()
   for port in ports {
     let kind = none
-    let m = _match-suffix(port.name, axis-suffixes)
-    if m != none {
-      kind = "axi-stream"
+    let m = none
+    let attrs = port.at("attrs", default: (:))
+    let interface = attrs.at("interface", default: none)
+    if interface != none and interface.kind == "bram" {
+      kind = "bram"
+      m = (prefix: interface.name, suffix: interface.signal)
     } else {
-      m = _match-suffix(port.name, axi-suffixes)
-      if m != none { kind = "axi" }
+      m = _match-suffix(port.name, axis-suffixes)
+      if m != none {
+        kind = "axi-stream"
+      } else {
+        m = _match-suffix(port.name, axi-suffixes)
+        if m != none {
+          kind = "axi"
+        } else {
+          m = _match-suffix(port.name, bram-suffixes)
+          if m != none { kind = "bram" }
+        }
+      }
     }
     if m == none {
       rest.push(port)
@@ -342,6 +413,8 @@
     if "tvalid" not in sig and not ("tdata" in sig and "tready" in sig) {
       return none
     }
+  } else if kind == "bram" {
+    if "addr" not in sig or ("din" not in sig and "dout" not in sig) { return none }
   } else {
     if sig.len() < 4 { return none }
     if "awvalid" not in sig and "arvalid" not in sig { return none }
@@ -353,6 +426,8 @@
 
   let ref = if kind == "axi-stream" {
     sig.at("tvalid", default: sig.at("tdata", default: none))
+  } else if kind == "bram" {
+    sig.at("addr", default: sig.at("din", default: sig.at("dout", default: none)))
   } else {
     sig.at("awvalid", default: sig.at("arvalid", default: none))
   }
@@ -363,19 +438,19 @@
     prefix: group.prefix,
     role: role,
     dir: if role == "master" { "output" } else { "input" },
-    data-width: _bus-width(group, "tdata", "wdata", "rdata"),
-    addr-width: _bus-width(group, "awaddr", "araddr"),
+    data-width: _bus-width(group, "tdata", "wdata", "rdata", "din", "dout"),
+    addr-width: _bus-width(group, "awaddr", "araddr", "addr"),
     signals: sig,
     ports: sig.values()
   )
 }
 
-/// Analyses the ports of a module and infers AXI4, AXI4-Lite and AXI4-Stream
-/// buses as well as clock and reset signals.
+/// Analyses the ports of a module and infers AXI4, AXI4-Lite, AXI4-Stream and
+/// BRAM buses as well as clock and reset signals.
 ///
 /// The returned dictionary contains:
 /// - `buses`: array of inferred buses. Each bus has the fields `kind`
-///   (`"axi"`, `"axi-lite"` or `"axi-stream"`), `prefix`, `role`
+///   (`"axi"`, `"axi-lite"`, `"axi-stream"` or `"bram"`), `prefix`, `role`
 ///   (`"master"` or `"slave"`), `dir`, `data-width`, `addr-width` and `signals`
 /// - `clocks`: array of clock ports
 /// - `resets`: array of reset ports (with an additional `active-low` field)
@@ -387,31 +462,31 @@
 #let analyze(module, name: none) = {
   let module = get-module(module, name: name)
 
-  let clocks = ()
-  let resets = ()
-  let others = ()
-  for port in module.ports {
-    if _is-clock(port.name) {
-      clocks.push(port)
-    } else if _is-reset(port.name) {
-      resets.push(port + (active-low: _is-active-low(port.name)))
-    } else {
-      others.push(port)
-    }
-  }
-
-  let (groups, rest) = _group-signals(others)
+  let (groups, rest) = _group-signals(module.ports)
   let buses = ()
-  let signals = rest
+  let ungrouped = rest
   for (_, group) in groups {
     let bus = _finalize-bus(group)
     if bus == none {
-      signals += group.signals.values()
+      ungrouped += group.signals.values()
     } else {
       buses.push(bus)
     }
   }
   buses = buses.sorted(key: it => it.prefix)
+
+  let clocks = ()
+  let resets = ()
+  let signals = ()
+  for port in ungrouped {
+    if _is-clock(port.name) {
+      clocks.push(port)
+    } else if _is-reset(port.name) {
+      resets.push(port + (active-low: _reset-active-low(port)))
+    } else {
+      signals.push(port)
+    }
+  }
 
   return (
     name: module.name,
@@ -431,7 +506,8 @@
 #let bus-kind-names = (
   "axi": "AXI4",
   "axi-lite": "AXI4-Lite",
-  "axi-stream": "AXI4-Stream"
+  "axi-stream": "AXI4-Stream",
+  "bram": "BRAM"
 )
 
 #let _bus-label(bus, show-widths: true, show-info: false) = {
@@ -546,8 +622,9 @@
 
 /// Draws a block from a Verilog module description.
 ///
-/// AXI4, AXI4-Lite and AXI4-Stream signals are grouped into single bus ports,
-/// and clock/reset signals are automatically detected and grouped together.
+/// AXI4, AXI4-Lite, AXI4-Stream and BRAM signals are grouped into single bus
+/// ports, and clock/reset signals are automatically detected and grouped
+/// together.
 ///
 /// ```typ
 /// #circuiteria.circuit({
@@ -669,7 +746,7 @@
     // active-low ports carry a bubble, so their stub starts past it
     let bubble = (north: (0, 0.2), east: (0.2, 0), south: (0, -0.2), west: (-0.2, 0))
     let ends = (north: (0, stub-length), east: (stub-length, 0), south: (0, -stub-length), west: (-stub-length, 0))
-    let gap = 0.1
+    let gap = 0.2
     for (side, side-ports) in ports {
       for port in side-ports {
         let anchor = id + "-port-" + port.id
@@ -687,7 +764,7 @@
           )
           for k in (1, 0, -1) {
             let start = (rel: (perp.at(0) * k, perp.at(1) * k), to: anchor)
-            draw.line(start, (rel: ends.at(side), to: start), stroke: wire.signal-width)
+            draw.line(start, (rel: ends.at(side), to: start), stroke:( thickness: wire.signal-width, dash: if k != 0 { "solid" } else { "densely-dashed"}) , )
           }
         } else if port.at("invert", default: false) {
           draw.line(
