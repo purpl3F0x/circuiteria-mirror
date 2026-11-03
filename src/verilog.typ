@@ -666,7 +666,7 @@
 /// - x (number, dictionary): The x position (bottom-left corner)
 /// - y (number, dictionary): The y position (bottom-left corner)
 /// - w (auto, number): Width of the block. Computed from the port names if `auto`
-/// - h (auto, number): Height of the block. Computed from the port count if `auto`
+/// - h (auto, number): Height of the block. Computed from the port count and the west/east margins if `auto`
 /// - id (auto, str): The block id. Defaults to the module name
 /// - name (auto, none, str, content): Name displayed in the block. Defaults to the module name
 /// - name-anchor (str): Anchor for the displayed name
@@ -680,7 +680,9 @@
 /// - fill (none, color): Fill color
 /// - stroke (stroke): Border stroke
 /// - radius (number, length, ratio, dictionary): The corner radius of the block
-/// - ports-margins (dictionary): Dictionary of ports margins
+/// - ports-align (str): Layout of the west/east ports: `"top"`, `"center"` or `"bottom"` pack them `ports-pitch` apart with minimal margins, `"spread"` spreads them evenly over the height
+/// - ports-pitch (auto, number): Spacing between two consecutive packed west/east ports. Computed from the labels if `auto`
+/// - ports-margins (dictionary): Dictionary of ports margins, as (`<start>`, `<end>`) ratios per side. On the west and east sides these are the top and bottom margins: `(8%, 14%)` by default with `ports-align: "spread"`, `(0%, 0%)` otherwise (room for the name and the north/south ports is then reserved automatically). The automatic height adapts to them
 /// - debug (dictionary): Dictionary of debug options
 #let block(
   module,
@@ -702,9 +704,15 @@
   fill: none,
   stroke: black + 1pt,
   radius: 0.5em,
+  ports-align: "center",
+  ports-pitch: auto,
   ports-margins: (:),
   debug: (ports: false)
 ) = {
+  assert(
+    ports-align in ("top", "center", "bottom", "spread"),
+    message: "ports-align must be \"top\", \"center\", \"bottom\" or \"spread\""
+  )
   let info = if type(module) == dictionary and "buses" in module {
     module
   } else {
@@ -734,15 +742,60 @@
   }
 
   let vert-count = calc.max(ports.north.len(), ports.south.len(), 0)
+  let packed = ports-align != "spread"
 
   let margins = ports-margins
   for side in ("west", "east") {
-    if side not in margins { margins.insert(side, (8%, 14%)) }
+    if side not in margins { margins.insert(side, if packed { (0%, 0%) } else { (8%, 14%) }) }
+  }
+  // Fraction of the height left to the ports of a side between its margins
+  let used(side) = {
+    let (top, bottom) = margins.at(side)
+    calc.max(100% - top - bottom, 10%) / 100%
   }
 
-  let h = if h != auto { h } else {
-    let rows = calc.max(rows-weight("west"), rows-weight("east"), 1)
-    calc.max(1.8, rows * 1.05 / 0.72, if vert-count > 0 { 2.2 } else { 0 })
+  // Room taken inside the block by the north/south ports and the name, kept
+  // clear of the packed west/east ports
+  let edge-room(side) = {
+    let lens = ports.at(side).map(it => if type(it.name) == str { it.name.len() } else { 0 })
+    let room = if lens.len() == 0 { 0 } else { calc.max(0.4, _text-width(calc.max(..lens)) + 0.2) }
+    if name != none and name-anchor.starts-with(side) { room = calc.max(room, 0.6) }
+    room
+  }
+  let top-room = edge-room("north")
+  let bottom-room = edge-room("south")
+
+  // Packed ports all share the same spacing, larger with two-line (bus) labels
+  let pitch = if ports-pitch != auto { ports-pitch } else {
+    let weights = ("west", "east").filter(side => ports.at(side).len() > 0)
+      .map(side => rows-weight(side) / ports.at(side).len())
+    0.9 * calc.max(1, ..weights)
+  }
+
+  let h = if h != auto { h } else if packed {
+    let side-h(side) = (ports.at(side).len() * pitch + top-room + bottom-room) / used(side)
+    calc.max(1.8, side-h("west"), side-h("east"))
+  } else {
+    // each row needs 1.1375 units of the height left between the margins
+    let side-h(side) = rows-weight(side) * 1.1375 / used(side)
+    calc.max(1.8, side-h("west"), side-h("east"), if vert-count > 0 { 2.2 } else { 0 })
+  }
+
+  if packed {
+    // The element spreads n ports evenly between the margins, at
+    // (i + 1) / (n + 1) of the way: pick the (possibly negative) margins that
+    // put them `pitch` apart, aligned inside the free area
+    let align = ("top": 0, "center": 0.5, "bottom": 1).at(ports-align)
+    for side in ("west", "east") {
+      let n = ports.at(side).len()
+      if n == 0 { continue }
+      let area-top = h * margins.at(side).at(0) / 100% + top-room
+      let area = h * used(side) - top-room - bottom-room
+      let first = area-top + align * (area - n * pitch) + pitch / 2
+      let start = (first - pitch) / h
+      let span = pitch * (n + 1) / h
+      margins.insert(side, (start * 100%, (1 - start - span) * 100%))
+    }
   }
   let w = if w != auto { w } else {
     let inner = _text-width(max-len("west") + max-len("east")) + 0.8
