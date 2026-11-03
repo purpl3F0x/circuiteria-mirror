@@ -317,7 +317,9 @@
 )
 
 #let bram-suffixes = (
-  "clk", "rst", "en", "we", "wen", "regce", "addr", "din", "dout"
+  "clk", "rst", "en", "we", "wen", "regce", "addr", "din", "dout",
+  // separate read/write ports (e.g. simple dual-port RAMs)
+  "rd_en", "rd_addr", "rd_data", "wr_en", "wr_addr", "wr_data"
 )
 
 // Signals that only exist on full AXI4 (used to tell AXI4 from AXI4-Lite)
@@ -428,7 +430,10 @@
       return none
     }
   } else if kind == "bram" {
-    if "addr" not in sig or ("din" not in sig and "dout" not in sig) { return none }
+    // the address requirement keeps FIFOs (`wr_en`, `rd_data`, ...) out
+    let has-addr = ("addr", "wr_addr", "rd_addr").any(it => it in sig)
+    let has-data = ("din", "dout", "wr_data", "rd_data").any(it => it in sig)
+    if not has-addr or not has-data { return none }
   } else if kind == "apb" {
     if "paddr" not in sig or "penable" not in sig { return none }
   } else {
@@ -443,7 +448,7 @@
   let ref = if kind == "axi-stream" {
     sig.at("tvalid", default: sig.at("tdata", default: none))
   } else if kind == "bram" {
-    sig.at("addr", default: sig.at("din", default: sig.at("dout", default: none)))
+    sig.at("addr", default: sig.at("wr_addr", default: sig.at("rd_addr", default: none)))
   } else if kind == "apb" {
     sig.paddr
   } else {
@@ -456,8 +461,8 @@
     prefix: group.prefix,
     role: role,
     dir: if role == "master" { "output" } else { "input" },
-    data-width: _bus-width(group, "tdata", "wdata", "rdata", "din", "dout", "pwdata", "prdata"),
-    addr-width: _bus-width(group, "awaddr", "araddr", "addr", "paddr"),
+    data-width: _bus-width(group, "tdata", "wdata", "rdata", "din", "dout", "wr_data", "rd_data", "pwdata", "prdata"),
+    addr-width: _bus-width(group, "awaddr", "araddr", "addr", "wr_addr", "rd_addr", "paddr"),
     signals: sig,
     ports: sig.values()
   )
