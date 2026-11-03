@@ -43,6 +43,16 @@ module axi_demo #(
     input  wire                      m_axis_tready,
     output wire                      m_axis_tlast,
 
+    // APB master
+    output wire [ADDR_WIDTH-1:0]     m_apb_paddr,
+    output wire                      m_apb_psel,
+    output wire                      m_apb_penable,
+    output wire                      m_apb_pwrite,
+    output wire [31:0]               m_apb_pwdata,
+    input  wire [31:0]               m_apb_prdata,
+    input  wire                      m_apb_pready,
+    input  wire                      m_apb_pslverr,
+
     // Vivado BRAM controller interface
      (* X_INTERFACE_INFO = "xilinx.com:interface:bram:1.0 tile_ram CLK",
          X_INTERFACE_PARAMETER = "MASTER_TYPE BRAM_CTRL, MEM_ECC NONE, MEM_WIDTH 128,

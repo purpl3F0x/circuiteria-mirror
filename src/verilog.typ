@@ -309,6 +309,13 @@
   "rid", "rdata", "rresp", "rlast", "ruser", "rvalid", "rready"
 )
 
+// AMBA APB3/APB4/APB5 signals ("pslverror" is the SpinalHDL spelling)
+#let apb-suffixes = (
+  "paddr", "pprot", "pnse", "psel", "penable", "pwrite", "pwdata", "pstrb",
+  "pready", "prdata", "pslverr", "pslverror", "pwakeup",
+  "pauser", "pwuser", "pruser", "pbuser"
+)
+
 #let bram-suffixes = (
   "clk", "rst", "en", "we", "wen", "regce", "addr", "din", "dout"
 )
@@ -321,8 +328,9 @@
   "arregion", "rid", "rlast"
 )
 
-#let _clock-re = regex("(?i)(^|[^a-z0-9])(a?clk|clock)([0-9]*)($|[^a-z0-9])")
-#let _reset-re = regex("(?i)(^|[^a-z0-9])(a?rst|a?reset)(_?n)?([0-9]*)($|[^a-z0-9])")
+// `pclk`/`presetn` are the APB names (a bare `preset` is too common a word)
+#let _clock-re = regex("(?i)(^|[^a-z0-9])([ap]?clk|clock)([0-9]*)($|[^a-z0-9])")
+#let _reset-re = regex("(?i)(^|[^a-z0-9])(a?rst|a?reset|preset_?n)(_?n)?([0-9]*)($|[^a-z0-9])")
 
 #let _is-clock(name) = name.match(_clock-re) != none
 #let _is-reset(name) = name.match(_reset-re) != none
@@ -355,6 +363,17 @@
   return (prefix: prefix.trim("_", at: end), suffix: best)
 }
 
+// Suffix tables tried in order when grouping ports by name
+#let _bus-suffixes = (
+  ("axi-stream", axis-suffixes),
+  ("axi", axi-suffixes),
+  ("apb", apb-suffixes),
+  ("bram", bram-suffixes)
+)
+
+// Vivado interface types (from `X_INTERFACE_INFO`) mapped to bus kinds
+#let _interface-kinds = ("apb": "apb", "bram": "bram")
+
 #let _group-signals(ports) = {
   let groups = (:)
   let rest = ()
@@ -363,20 +382,15 @@
     let m = none
     let attrs = port.at("attrs", default: (:))
     let interface = attrs.at("interface", default: none)
-    if interface != none and interface.kind == "bram" {
-      kind = "bram"
+    if interface != none and interface.kind in _interface-kinds {
+      kind = _interface-kinds.at(interface.kind)
       m = (prefix: interface.name, suffix: interface.signal)
     } else {
-      m = _match-suffix(port.name, axis-suffixes)
-      if m != none {
-        kind = "axi-stream"
-      } else {
-        m = _match-suffix(port.name, axi-suffixes)
+      for (k, suffixes) in _bus-suffixes {
+        m = _match-suffix(port.name, suffixes)
         if m != none {
-          kind = "axi"
-        } else {
-          m = _match-suffix(port.name, bram-suffixes)
-          if m != none { kind = "bram" }
+          kind = k
+          break
         }
       }
     }
@@ -415,6 +429,8 @@
     }
   } else if kind == "bram" {
     if "addr" not in sig or ("din" not in sig and "dout" not in sig) { return none }
+  } else if kind == "apb" {
+    if "paddr" not in sig or "penable" not in sig { return none }
   } else {
     if sig.len() < 4 { return none }
     if "awvalid" not in sig and "arvalid" not in sig { return none }
@@ -428,6 +444,8 @@
     sig.at("tvalid", default: sig.at("tdata", default: none))
   } else if kind == "bram" {
     sig.at("addr", default: sig.at("din", default: sig.at("dout", default: none)))
+  } else if kind == "apb" {
+    sig.paddr
   } else {
     sig.at("awvalid", default: sig.at("arvalid", default: none))
   }
@@ -438,19 +456,19 @@
     prefix: group.prefix,
     role: role,
     dir: if role == "master" { "output" } else { "input" },
-    data-width: _bus-width(group, "tdata", "wdata", "rdata", "din", "dout"),
-    addr-width: _bus-width(group, "awaddr", "araddr", "addr"),
+    data-width: _bus-width(group, "tdata", "wdata", "rdata", "din", "dout", "pwdata", "prdata"),
+    addr-width: _bus-width(group, "awaddr", "araddr", "addr", "paddr"),
     signals: sig,
     ports: sig.values()
   )
 }
 
-/// Analyses the ports of a module and infers AXI4, AXI4-Lite, AXI4-Stream and
-/// BRAM buses as well as clock and reset signals.
+/// Analyses the ports of a module and infers AXI4, AXI4-Lite, AXI4-Stream,
+/// APB and BRAM buses as well as clock and reset signals.
 ///
 /// The returned dictionary contains:
 /// - `buses`: array of inferred buses. Each bus has the fields `kind`
-///   (`"axi"`, `"axi-lite"`, `"axi-stream"` or `"bram"`), `prefix`, `role`
+///   (`"axi"`, `"axi-lite"`, `"axi-stream"`, `"apb"` or `"bram"`), `prefix`, `role`
 ///   (`"master"` or `"slave"`), `dir`, `data-width`, `addr-width` and `signals`
 /// - `clocks`: array of clock ports
 /// - `resets`: array of reset ports (with an additional `active-low` field)
@@ -507,6 +525,7 @@
   "axi": "AXI4",
   "axi-lite": "AXI4-Lite",
   "axi-stream": "AXI4-Stream",
+  "apb": "APB",
   "bram": "BRAM"
 )
 
@@ -574,7 +593,8 @@
     let side = if bus.dir == "output" { "east" } else { "west" }
     let label = _bus-label(bus, show-widths: show-widths, show-info: show-bus-info)
     ports.at(side).push((
-      id: bus.prefix,
+      // unprefixed buses (e.g. bare `PADDR`, `PSEL`, ...) are named by their kind
+      id: if bus.prefix != "" { bus.prefix } else { bus.kind },
       name: label.label,
       label-len: label.len,
       bus: true,
@@ -622,8 +642,8 @@
 
 /// Draws a block from a Verilog module description.
 ///
-/// AXI4, AXI4-Lite, AXI4-Stream and BRAM signals are grouped into single bus
-/// ports, and clock/reset signals are automatically detected and grouped
+/// AXI4, AXI4-Lite, AXI4-Stream, APB and BRAM signals are grouped into single
+/// bus ports, and clock/reset signals are automatically detected and grouped
 /// together.
 ///
 /// ```typ
@@ -632,8 +652,9 @@
 /// })
 /// ```
 ///
-/// The port ids are the signal names (or the bus prefixes), so wires can be
-/// attached with `"<id>-port-<signal>"`.
+/// The port ids are the signal names (or the bus prefixes, or the bus kind
+/// such as `"apb"` for unprefixed buses), so wires can be attached with
+/// `"<id>-port-<signal>"`.
 ///
 /// - module (str, array, dictionary): Verilog source code or a parsed module
 /// - module-name (none, str): Name of the wanted module (when several are present)

@@ -75,8 +75,8 @@ To use this package, simply import [circuiteria](https://typst.app/universe/pack
 
 ### Verilog modules
 Blocks can be generated automatically from Verilog/SystemVerilog sources.
-AXI4, AXI4-Lite, AXI4-Stream and Vivado BRAM interface signals are grouped
-into single bus ports, and clock/reset signals are detected and placed
+AXI4, AXI4-Lite, AXI4-Stream, APB and Vivado BRAM interface signals are
+grouped into single bus ports, and clock/reset signals are detected and placed
 together:
 ```typ
 #circuiteria.circuit({
@@ -85,4 +85,5 @@ together:
 })
 ```
 The port ids are the signal names, or the bus prefixes for inferred buses
-(e.g. `"my_module-port-s_axi"`).
+(e.g. `"my_module-port-s_axi"`). Unprefixed buses (e.g. bare `PADDR`, `PSEL`,
+...) are named after their kind (`"my_module-port-apb"`).
